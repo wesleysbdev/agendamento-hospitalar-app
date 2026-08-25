@@ -29,6 +29,6 @@ public abstract class UsuarioValidator {
     }
 
     public static <T extends Usuario> T buscarUsuarioPorUuid(UUID uuid) {
-        return repository.buscarPorUuid(uuid).orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
+        return (T) repository.buscarPorUuid(uuid).orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
     }
 }
