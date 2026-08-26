@@ -6,21 +6,23 @@ import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Email;
 
 import java.util.UUID;
 
-public abstract class Usuario {
+public abstract sealed class Usuario permits Administrador, Medico, Paciente, Enfermeiro {
 
     private final UUID uuid;
     private String nome;
     private Email email;
     private String senha;
     private boolean ativo;
+    private boolean excluido;
 
-    public Usuario(UUID uuid, String nome, Email email, String senha, boolean ativo) {
+    public Usuario(UUID uuid, String nome, Email email, String senha, boolean ativo, boolean excluido) {
         validarDadosObrigatorios(uuid, nome, email, senha);
         this.uuid = uuid;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.ativo = ativo;
+        this.excluido = excluido;
     }
 
     public void alterarDados(String nome, Email email) {
@@ -44,8 +46,12 @@ public abstract class Usuario {
         this.ativo = true;
     }
 
+    public void excluirUsuario() {
+        this.excluido = true;
+    }
+
     public void definirNovaSenha(String senhaHash) {
-        if (nome == null || nome.isBlank()) {
+        if (senhaHash == null || senhaHash.isBlank()) {
             throw new UsuarioDadosInvalidosException("Nova senha é obrigatória.");
         }
 
@@ -70,6 +76,10 @@ public abstract class Usuario {
 
     public boolean isAtivo() {
         return ativo;
+    }
+
+    public boolean isExcluido() {
+        return excluido;
     }
 
     public abstract TipoUsuario getTipo();

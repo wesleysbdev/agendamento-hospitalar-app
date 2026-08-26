@@ -6,11 +6,11 @@ import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Email;
 
 import java.util.UUID;
 
-public class Medico extends Usuario {
+public final class Medico extends Usuario {
     private Crm crm;
 
-    public Medico(UUID uuid, String nome, Email email, String senha, boolean ativo, Crm crm) {
-        super(uuid, nome, email, senha, ativo);
+    public Medico(UUID uuid, String nome, Email email, String senha, boolean ativo, Crm crm, boolean excluido) {
+        super(uuid, nome, email, senha, ativo, excluido);
         this.crm = crm;
     }
 

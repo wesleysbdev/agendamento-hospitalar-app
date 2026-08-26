@@ -12,6 +12,8 @@ import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Crm;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Email;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
 
+import java.util.UUID;
+
 public class EditarUsuarioUseCase implements GestaoEditarUsuario {
 
     private final UsuarioRepository repository;
@@ -31,6 +33,14 @@ public class EditarUsuarioUseCase implements GestaoEditarUsuario {
         } else {
             usuario.ativarUsuario();
         }
+        repository.salvar(usuario);
+    }
+
+    @Override
+    public void excluirUsuario(UUID usuarioUuid, UsuarioAutenticado usuarioAutenticado) {
+        PermissaoValidator.admin(usuarioAutenticado.tipo());
+        Usuario usuario = UsuarioValidator.buscarUsuarioPorUuid(usuarioUuid);
+        usuario.excluirUsuario();
         repository.salvar(usuario);
     }
 

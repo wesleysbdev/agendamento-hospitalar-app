@@ -5,10 +5,10 @@ import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Email;
 
 import java.util.UUID;
 
-public class Administrador extends Usuario {
+public final class Administrador extends Usuario {
 
-    public Administrador(UUID uuid, String nome, Email email, String senha, boolean ativo) {
-        super(uuid, nome, email, senha, ativo);
+    public Administrador(UUID uuid, String nome, Email email, String senha, boolean ativo, boolean excluido) {
+        super(uuid, nome, email, senha, ativo, excluido);
     }
 
     @Override

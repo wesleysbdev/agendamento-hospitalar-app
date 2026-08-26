@@ -6,12 +6,12 @@ import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
 
 import java.util.UUID;
 
-public class Paciente extends Usuario {
+public final class Paciente extends Usuario {
 
     private Telefone telefone;
 
-    public Paciente(UUID uuid, String nome, Email email, Telefone telefone, String senha, boolean ativo) {
-        super(uuid, nome, email, senha, ativo);
+    public Paciente(UUID uuid, String nome, Email email, Telefone telefone, String senha, boolean ativo, boolean excluido) {
+        super(uuid, nome, email, senha, ativo, excluido);
         this.telefone = telefone;
     }
 

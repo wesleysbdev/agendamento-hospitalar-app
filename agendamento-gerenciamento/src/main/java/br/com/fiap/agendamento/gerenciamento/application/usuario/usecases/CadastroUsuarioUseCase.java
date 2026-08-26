@@ -39,7 +39,8 @@ public class CadastroUsuarioUseCase implements GestaoCadastroUsuario {
                 new Email(pacienteCadastro.email()),
                 new Telefone(pacienteCadastro.telefone()),
                 codificador.codificar(pacienteCadastro.senha()),
-                true
+                true,
+                false
         );
 
         this.repository.salvar(paciente);
@@ -54,7 +55,8 @@ public class CadastroUsuarioUseCase implements GestaoCadastroUsuario {
                 usuarioCadastro.nome(),
                 new Email(usuarioCadastro.email()),
                 codificador.codificar(usuarioCadastro.senha()),
-                true
+                true,
+                false
         );
 
         this.repository.salvar(administrador);
@@ -69,7 +71,8 @@ public class CadastroUsuarioUseCase implements GestaoCadastroUsuario {
                 enfermeiroCadastro.nome(),
                 new Email(enfermeiroCadastro.email()),
                 codificador.codificar(enfermeiroCadastro.senha()),
-                true
+                true,
+                false
         );
 
         this.repository.salvar(enfermeiro);
@@ -85,7 +88,8 @@ public class CadastroUsuarioUseCase implements GestaoCadastroUsuario {
                 new Email(medicoCadastro.email()),
                 codificador.codificar(medicoCadastro.senha()),
                 true,
-                Crm.criarDeTextoCompleto(medicoCadastro.crm())
+                Crm.criarDeTextoCompleto(medicoCadastro.crm()),
+                false
         );
 
         repository.salvar(medico);

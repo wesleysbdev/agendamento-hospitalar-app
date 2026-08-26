@@ -3,8 +3,12 @@ package br.com.fiap.agendamento.gerenciamento.application.usuario.ports.in;
 import br.com.fiap.agendamento.gerenciamento.application.dto.UsuarioAutenticado;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.edicao.*;
 
+import java.util.UUID;
+
 public interface GestaoEditarUsuario {
     void mudarEstadoDoUsuario(AlterarEstadoDTO alterarEstadoDTO, UsuarioAutenticado usuarioAutenticado);
+
+    void excluirUsuario(UUID usuarioUuid, UsuarioAutenticado usuarioAutenticado);
 
     void alterarDadosAdministrador(AdministradorEdicaoDTO administradorEdicaoDTO, UsuarioAutenticado usuarioAutenticado);
 
