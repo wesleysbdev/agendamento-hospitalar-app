@@ -9,5 +9,5 @@ import lombok.Setter;
 @DiscriminatorValue("ADMINISTRADOR")
 @Getter
 @Setter
-public non-sealed class AdministradorModel extends UsuarioModel {
+public class AdministradorModel extends UsuarioModel {
 }

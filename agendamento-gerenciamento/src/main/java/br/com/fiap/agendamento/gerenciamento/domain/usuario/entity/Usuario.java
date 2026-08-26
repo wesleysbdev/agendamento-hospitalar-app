@@ -43,6 +43,11 @@ public abstract sealed class Usuario permits Administrador, Medico, Paciente, En
     }
 
     public void ativar() {
+        if (excluido) {
+            throw new UsuarioDadosInvalidosException(
+                    "Usuário excluído não pode ser ativado."
+            );
+        }
         this.ativo = true;
     }
 

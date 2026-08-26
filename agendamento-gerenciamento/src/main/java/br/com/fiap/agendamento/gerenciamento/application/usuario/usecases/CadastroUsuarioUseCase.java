@@ -1,7 +1,6 @@
 package br.com.fiap.agendamento.gerenciamento.application.usuario.usecases;
 
 import br.com.fiap.agendamento.gerenciamento.application.dto.UsuarioAutenticado;
-import br.com.fiap.agendamento.gerenciamento.application.usuario.validator.UsuarioValidator;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.validator.PermissaoValidator;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.cadastro.AdministradorCadastroDTO;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.cadastro.EnfermeiroCadastroDTO;
@@ -10,10 +9,8 @@ import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.cadastro.Pa
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.in.GestaoCadastroUsuario;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.out.CodificadorSenha;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.out.UsuarioRepository;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Administrador;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Enfermeiro;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Medico;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Paciente;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.*;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioDadosInvalidosException;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Crm;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Email;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
@@ -31,8 +28,8 @@ public class CadastroUsuarioUseCase implements GestaoCadastroUsuario {
     }
 
     @Override
-    public void cadastrarPaciente(PacienteCadastroDTO pacienteCadastro) {
-        UsuarioValidator.validarEmailParaCriacao(pacienteCadastro.email());
+    public Usuario cadastrarPaciente(PacienteCadastroDTO pacienteCadastro) {
+        validarEmailParaCriacao(pacienteCadastro.email());
         Paciente paciente = new Paciente(
                 UUID.randomUUID(),
                 pacienteCadastro.nome(),
@@ -43,13 +40,13 @@ public class CadastroUsuarioUseCase implements GestaoCadastroUsuario {
                 false
         );
 
-        this.repository.salvar(paciente);
+        return this.repository.salvar(paciente);
     }
 
     @Override
-    public void cadastrarAdministrador(AdministradorCadastroDTO usuarioCadastro, UsuarioAutenticado usuarioAutenticado) {
+    public Usuario cadastrarAdministrador(AdministradorCadastroDTO usuarioCadastro, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.admin(usuarioAutenticado.tipo());
-        UsuarioValidator.validarEmailParaCriacao(usuarioCadastro.email());
+        validarEmailParaCriacao(usuarioCadastro.email());
         Administrador administrador = new Administrador(
                 UUID.randomUUID(),
                 usuarioCadastro.nome(),
@@ -59,13 +56,13 @@ public class CadastroUsuarioUseCase implements GestaoCadastroUsuario {
                 false
         );
 
-        this.repository.salvar(administrador);
+        return this.repository.salvar(administrador);
     }
 
     @Override
-    public void cadastrarEnfermeiro(EnfermeiroCadastroDTO enfermeiroCadastro, UsuarioAutenticado usuarioAutenticado) {
+    public Usuario cadastrarEnfermeiro(EnfermeiroCadastroDTO enfermeiroCadastro, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.adminEEnfermeiro(usuarioAutenticado.tipo());
-        UsuarioValidator.validarEmailParaCriacao(enfermeiroCadastro.email());
+        validarEmailParaCriacao(enfermeiroCadastro.email());
         Enfermeiro enfermeiro = new Enfermeiro(
                 UUID.randomUUID(),
                 enfermeiroCadastro.nome(),
@@ -75,13 +72,13 @@ public class CadastroUsuarioUseCase implements GestaoCadastroUsuario {
                 false
         );
 
-        this.repository.salvar(enfermeiro);
+        return this.repository.salvar(enfermeiro);
     }
 
     @Override
-    public void cadastrarMedico(MedicoCadastroDTO medicoCadastro, UsuarioAutenticado usuarioAutenticado) {
+    public Usuario cadastrarMedico(MedicoCadastroDTO medicoCadastro, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.adminEEnfermeiro(usuarioAutenticado.tipo());
-        UsuarioValidator.validarEmailParaCriacao(medicoCadastro.email());
+        validarEmailParaCriacao(medicoCadastro.email());
         Medico medico = new Medico(
                 UUID.randomUUID(),
                 medicoCadastro.nome(),
@@ -92,7 +89,13 @@ public class CadastroUsuarioUseCase implements GestaoCadastroUsuario {
                 false
         );
 
-        repository.salvar(medico);
+        return repository.salvar(medico);
+    }
+
+    private void validarEmailParaCriacao(String emailStr) {
+        if (repository.buscarPorEmail(new Email(emailStr)).isPresent()) {
+            throw new UsuarioDadosInvalidosException("E-mail já cadastrado.");
+        }
     }
 
 }

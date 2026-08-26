@@ -25,45 +25,33 @@ public class UsuarioRepositoryAdapter implements UsuarioRepository {
 
     @Override
     public List<Usuario> listar() {
-        List<UsuarioModel> model = repository.findAll();
-        return mapper.paraEntidades(model);
+        return repository.findAll().stream().map(mapper::paraEntidade).toList();
     }
 
     @Override
-    public <T extends Usuario> Optional<T> buscarPorUuid(UUID uuid) {
-        Optional<UsuarioModel> model = repository.findByUuid(uuid);
-        return (Optional<T>) mapper.paraEntidade(model);
+    public Optional<Usuario> buscarPorUuid(UUID uuid) {
+        return repository.findByUuid(uuid).map(mapper::paraEntidade);
     }
 
     @Override
     public List<Usuario> listarPorTipo(TipoUsuario tipoUsuario) {
-        return mapper.paraEntidades(repository.findByTipo(tipoUsuario));
+        return repository.findByTipo(tipoUsuario.toString()).stream().map(mapper::paraEntidade).toList();
     }
 
     @Override
-    public void salvar(Usuario usuario) {
+    public Usuario salvar(Usuario usuario) {
+        UsuarioModel model = repository.findByUuid(usuario.getUuid())
+                .map(existente -> {
+                    mapper.atualizarModelo(usuario, existente);
+                    return existente;
+                }).orElseGet(() -> mapper.paraModelo(usuario));
 
-        UsuarioModel model = switch (usuario) {
-            case Medico medico -> {
-                MedicoModel medicoModel = mapper.paraModelo(usuario);
-                medicoModel.setCrm(medico.getCrm().toString());
-                yield medicoModel;
-            }
-            case Paciente paciente -> {
-                PacienteModel pacienteModel = mapper.paraModelo(usuario);
-                pacienteModel.setTelefone(paciente.getTelefone().valor());
-                yield pacienteModel;
-            }
-            case Administrador administrador -> mapper.paraModelo(usuario);
-            case Enfermeiro enfermeiro -> mapper.paraModelo(usuario);
-            default -> throw new IllegalArgumentException("Tipo de usuário não suportado para persistência: " + usuario.getClass().getName());
-        };
-
-        repository.save(model);
+        UsuarioModel salvo = repository.save(model);
+        return mapper.paraEntidade(salvo);
     }
 
     @Override
     public Optional<Usuario> buscarPorEmail(Email email) {
-        return mapper.paraEntidade(repository.findByEmail(email.valor()));
+        return repository.findByEmail(email.valor()).map(mapper::paraEntidade);
     }
 }

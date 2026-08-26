@@ -4,6 +4,7 @@ import br.com.fiap.agendamento.gerenciamento.application.dto.UsuarioAutenticado;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.enums.TipoUsuario;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioNaoAutorizadoException;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -16,7 +17,7 @@ public abstract class PermissaoValidator {
     }
 
     public static void apenasOProprio(UsuarioAutenticado usuarioAutenticado, UUID alvoUuid) {
-        if (usuarioAutenticado.tipo() != TipoUsuario.ADMINISTRADOR && usuarioAutenticado.uuid() != alvoUuid) {
+        if (usuarioAutenticado.tipo() != TipoUsuario.ADMINISTRADOR && !Objects.equals(usuarioAutenticado.uuid(), alvoUuid)) {
             throw new UsuarioNaoAutorizadoException();
         }
     }

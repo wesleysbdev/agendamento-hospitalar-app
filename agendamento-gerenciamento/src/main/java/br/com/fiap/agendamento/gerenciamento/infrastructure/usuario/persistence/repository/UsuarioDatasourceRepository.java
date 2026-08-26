@@ -9,9 +9,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UsuarioDatasourceRepository extends JpaRepository<UsuarioModel, Long> {
-    <T extends UsuarioModel> Optional<T> findByUuid(UUID uuid);
+    Optional<UsuarioModel> findByUuid(UUID uuid);
 
-    List<UsuarioModel> findByTipo(TipoUsuario tipoUsuario);
+    List<UsuarioModel> findByTipo(String tipoUsuario);
 
     Optional<UsuarioModel> findByEmail(String valor);
 }

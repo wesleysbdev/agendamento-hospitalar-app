@@ -10,7 +10,7 @@ import lombok.Setter;
 @DiscriminatorValue("PACIENTE")
 @Getter
 @Setter
-public final class PacienteModel extends UsuarioModel {
+public class PacienteModel extends UsuarioModel {
 
     @Column(nullable = false, length = 13)
     private String telefone;

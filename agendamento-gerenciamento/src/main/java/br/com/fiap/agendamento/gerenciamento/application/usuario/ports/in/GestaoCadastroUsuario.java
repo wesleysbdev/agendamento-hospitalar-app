@@ -5,13 +5,14 @@ import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.cadastro.En
 import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.cadastro.MedicoCadastroDTO;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.cadastro.AdministradorCadastroDTO;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.cadastro.PacienteCadastroDTO;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Usuario;
 
 public interface GestaoCadastroUsuario {
-    void cadastrarAdministrador(AdministradorCadastroDTO usuarioCadastro, UsuarioAutenticado usuarioAutenticado);
+    Usuario cadastrarAdministrador(AdministradorCadastroDTO usuarioCadastro, UsuarioAutenticado usuarioAutenticado);
 
-    void cadastrarMedico(MedicoCadastroDTO medicoCadastro, UsuarioAutenticado usuarioAutenticado);
+    Usuario cadastrarMedico(MedicoCadastroDTO medicoCadastro, UsuarioAutenticado usuarioAutenticado);
 
-    void cadastrarEnfermeiro(EnfermeiroCadastroDTO enfermeiroCadastroDTO, UsuarioAutenticado usuarioAutenticado);
+    Usuario cadastrarEnfermeiro(EnfermeiroCadastroDTO enfermeiroCadastroDTO, UsuarioAutenticado usuarioAutenticado);
 
-    void cadastrarPaciente(PacienteCadastroDTO pacienteCadastro);
+    Usuario cadastrarPaciente(PacienteCadastroDTO pacienteCadastro);
 }

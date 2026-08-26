@@ -9,5 +9,5 @@ import lombok.Setter;
 @DiscriminatorValue("ENFERMEIRO")
 @Getter
 @Setter
-public final class EnfermeiroModel extends UsuarioModel {
+public class EnfermeiroModel extends UsuarioModel {
 }

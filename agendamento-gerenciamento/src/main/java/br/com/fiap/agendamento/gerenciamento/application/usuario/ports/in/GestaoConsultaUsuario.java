@@ -12,5 +12,5 @@ public interface GestaoConsultaUsuario {
 
     UsuarioDTO buscarUsuarioPorUuid(UUID uuid, UsuarioAutenticado usuarioAutenticado);
 
-    List<? extends UsuarioDTO> listarPorTipo(UsuarioAutenticado usuarioAutenticado, TipoUsuario tipo);
+    List<UsuarioDTO> listarPorTipo(UsuarioAutenticado usuarioAutenticado, TipoUsuario tipo);
 }

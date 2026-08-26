@@ -5,9 +5,9 @@ import br.com.fiap.agendamento.gerenciamento.application.usuario.validator.Permi
 import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.consulta.*;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.in.GestaoConsultaUsuario;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.out.UsuarioRepository;
-import br.com.fiap.agendamento.gerenciamento.application.usuario.validator.UsuarioValidator;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.*;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.enums.TipoUsuario;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioNaoEncontradoException;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,23 +29,18 @@ public class ConsultaUsuarioUseCase implements GestaoConsultaUsuario {
 
     @Override
     public UsuarioDTO buscarUsuarioPorUuid(UUID uuid, UsuarioAutenticado usuarioAutenticado) {
-        PermissaoValidator.apenasOProprio(usuarioAutenticado, usuarioAutenticado.uuid());
-        Usuario usuario = UsuarioValidator.buscarUsuarioPorUuid(uuid);
+        PermissaoValidator.apenasOProprio(usuarioAutenticado, uuid);
+        Usuario usuario = buscarUsuarioPorUuid(uuid);
         return converterParaDTO(usuario);
     }
 
     @Override
-    public List<? extends UsuarioDTO> listarPorTipo(UsuarioAutenticado usuarioAutenticado, TipoUsuario tipoUsuario) {
+    public List<UsuarioDTO> listarPorTipo(UsuarioAutenticado usuarioAutenticado, TipoUsuario tipoUsuario) {
 
-        if (tipoUsuario.equals(TipoUsuario.ADMINISTRADOR) || tipoUsuario.equals(TipoUsuario.ENFERMEIRO)) {
-            PermissaoValidator.admin(usuarioAutenticado.tipo());
+        switch (tipoUsuario) {
+            case ADMINISTRADOR, ENFERMEIRO, MEDICO -> PermissaoValidator.admin(usuarioAutenticado.tipo());
+            case PACIENTE -> PermissaoValidator.medicoEEnfermeiro(usuarioAutenticado.tipo());
         }
-
-        if (tipoUsuario.equals(TipoUsuario.PACIENTE)) {
-            PermissaoValidator.medicoEEnfermeiro(usuarioAutenticado.tipo());
-        }
-
-        PermissaoValidator.admin(usuarioAutenticado.tipo());
 
         List<Usuario> usuarios = repository.listarPorTipo(tipoUsuario);
         return usuarios.stream().map(this::converterParaDTO).toList();
@@ -83,8 +78,10 @@ public class ConsultaUsuarioUseCase implements GestaoConsultaUsuario {
                     pac.getTipo(),
                     pac.getTelefone().valor()
             );
-            default ->
-                    throw new IllegalArgumentException("Tipo de usuário desconhecido: " + usuario.getClass().getName());
         };
+    }
+
+    private Usuario buscarUsuarioPorUuid(UUID uuid) {
+        return repository.buscarPorUuid(uuid).orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
     }
 }

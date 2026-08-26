@@ -6,8 +6,9 @@ import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.in.Gestao
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.out.CodificadorSenha;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.out.UsuarioRepository;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.validator.PermissaoValidator;
-import br.com.fiap.agendamento.gerenciamento.application.usuario.validator.UsuarioValidator;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.*;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioDadosInvalidosException;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioNaoEncontradoException;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Crm;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Email;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
@@ -25,67 +26,117 @@ public class EditarUsuarioUseCase implements GestaoEditarUsuario {
     }
 
     @Override
-    public void mudarEstadoDoUsuario(AlterarEstadoDTO alterarEstadoDTO, UsuarioAutenticado usuarioAutenticado) {
+    public Usuario mudarEstadoDoUsuario(AlterarEstadoDTO alterarEstadoDTO, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.admin(usuarioAutenticado.tipo());
-        Usuario usuario = UsuarioValidator.buscarUsuarioPorUuid(alterarEstadoDTO.usuarioUuid());
+        Usuario usuario = buscarUsuarioPorUuid(alterarEstadoDTO.usuarioUuid());
         if (alterarEstadoDTO.ativo()) {
-            usuario.inativar();
-        } else {
             usuario.ativar();
+        } else {
+            usuario.inativar();
         }
-        repository.salvar(usuario);
+        return repository.salvar(usuario);
     }
 
     @Override
-    public void excluirUsuario(UUID usuarioUuid, UsuarioAutenticado usuarioAutenticado) {
+    public Usuario excluirUsuario(UUID usuarioUuid, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.admin(usuarioAutenticado.tipo());
-        Usuario usuario = UsuarioValidator.buscarUsuarioPorUuid(usuarioUuid);
+        Usuario usuario = buscarUsuarioPorUuid(usuarioUuid);
         usuario.excluir();
-        repository.salvar(usuario);
+        return repository.salvar(usuario);
     }
 
     @Override
-    public void alterarSenhaUsuario(AlteracaoSenhaDTO alteracaoSenha, UsuarioAutenticado usuarioAutenticado) {
+    public Usuario alterarSenhaUsuario(AlteracaoSenhaDTO alteracaoSenha, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.apenasOProprio(usuarioAutenticado, alteracaoSenha.usuarioUuid());
-        Usuario usuario = UsuarioValidator.buscarUsuarioPorUuid(alteracaoSenha.usuarioUuid());
+        Usuario usuario = buscarUsuarioPorUuid(alteracaoSenha.usuarioUuid());
         usuario.definirNovaSenha(codificador.codificar(alteracaoSenha.senhaNova()));
-        repository.salvar(usuario);
+        return repository.salvar(usuario);
     }
 
     @Override
-    public void alterarDadosAdministrador(AdministradorEdicaoDTO administradorEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
+    public Usuario alterarDadosAdministrador(AdministradorEdicaoDTO administradorEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.apenasOProprio(usuarioAutenticado, administradorEdicaoDTO.uuid());
-        Administrador admin = UsuarioValidator.buscarUsuarioPorUuid(administradorEdicaoDTO.uuid());
-        UsuarioValidator.validarEmailParaEdicao(admin, administradorEdicaoDTO.email());
+        Administrador admin = buscarAdministradorPorUuid(administradorEdicaoDTO.uuid());
+        validarEmailParaEdicao(admin, administradorEdicaoDTO.email());
         admin.alterarDados(administradorEdicaoDTO.nome(), new Email(administradorEdicaoDTO.email()));
-        repository.salvar(admin);
+        return repository.salvar(admin);
     }
 
     @Override
-    public void alterarDadosEnfermeiro(EnfermeiroEdicaoDTO enfermeiroEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
+    public Usuario alterarDadosEnfermeiro(EnfermeiroEdicaoDTO enfermeiroEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.adminOuApenasProprio(usuarioAutenticado, enfermeiroEdicaoDTO.uuid());
-        Enfermeiro enfermeiro = UsuarioValidator.buscarUsuarioPorUuid(enfermeiroEdicaoDTO.uuid());
-        UsuarioValidator.validarEmailParaEdicao(enfermeiro, enfermeiroEdicaoDTO.email());
+        Enfermeiro enfermeiro = buscarEnfermeiroPorUuid(enfermeiroEdicaoDTO.uuid());
+        validarEmailParaEdicao(enfermeiro, enfermeiroEdicaoDTO.email());
         enfermeiro.alterarDados(enfermeiroEdicaoDTO.nome(), new Email(enfermeiroEdicaoDTO.email()));
-        repository.salvar(enfermeiro);
+        return repository.salvar(enfermeiro);
     }
 
     @Override
-    public void alterarDadosPaciente(PacienteEdicaoDTO pacienteEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
+    public Usuario alterarDadosPaciente(PacienteEdicaoDTO pacienteEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.adminEpacienteApenasProprio(usuarioAutenticado, pacienteEdicaoDTO.uuid());
-        Paciente paciente = UsuarioValidator.buscarUsuarioPorUuid(pacienteEdicaoDTO.uuid());
-        UsuarioValidator.validarEmailParaEdicao(paciente, pacienteEdicaoDTO.email());
+        Paciente paciente = buscarPacientePorUuid(pacienteEdicaoDTO.uuid());
+        validarEmailParaEdicao(paciente, pacienteEdicaoDTO.email());
         paciente.alterarDados(pacienteEdicaoDTO.nome(), new Email(pacienteEdicaoDTO.email()), new Telefone(pacienteEdicaoDTO.telefone()));
-        repository.salvar(paciente);
+        return repository.salvar(paciente);
     }
 
     @Override
-    public void alterarDadosMedico(MedicoEdicaoDTO medicoEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
+    public Usuario alterarDadosMedico(MedicoEdicaoDTO medicoEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.adminEMedicoApenasProprio(usuarioAutenticado, medicoEdicaoDTO.uuid());
-        Medico medico = UsuarioValidator.buscarUsuarioPorUuid(medicoEdicaoDTO.uuid());
-        UsuarioValidator.validarEmailParaEdicao(medico, medicoEdicaoDTO.email());
+        Medico medico = buscarMedicoPorUuid(medicoEdicaoDTO.uuid());
+        validarEmailParaEdicao(medico, medicoEdicaoDTO.email());
         medico.alterarDados(medicoEdicaoDTO.nome(), new Email(medicoEdicaoDTO.email()), Crm.criarDeTextoCompleto(medicoEdicaoDTO.crm()));
-        repository.salvar(medico);
+        return repository.salvar(medico);
+    }
+
+    private void validarEmailParaEdicao(Usuario usuario, String emailStr) {
+        if (!usuario.getEmail().valor().equalsIgnoreCase(emailStr) && repository.buscarPorEmail(new Email(emailStr)).isPresent()) {
+            throw new UsuarioDadosInvalidosException("E-mail já cadastrado.");
+        }
+    }
+
+    private Usuario buscarUsuarioPorUuid(UUID uuid) {
+        return repository.buscarPorUuid(uuid).orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
+    }
+
+    private Medico buscarMedicoPorUuid(UUID uuid) {
+        Usuario usuario = buscarUsuarioPorUuid(uuid);
+
+        if (usuario instanceof Medico medico) {
+            return medico;
+        }
+
+        throw new UsuarioDadosInvalidosException("O usuário informado não é um médico.");
+    }
+
+    private Paciente buscarPacientePorUuid(UUID uuid) {
+        Usuario usuario = buscarUsuarioPorUuid(uuid);
+
+        if (usuario instanceof Paciente paciente) {
+            return paciente;
+        }
+
+        throw new UsuarioDadosInvalidosException("O usuário informado não é um paciente.");
+    }
+
+    private Administrador buscarAdministradorPorUuid(UUID uuid) {
+        Usuario usuario = buscarUsuarioPorUuid(uuid);
+
+        if (usuario instanceof Administrador adm) {
+            return adm;
+        }
+
+        throw new UsuarioDadosInvalidosException("O usuário informado não é um administrador.");
+    }
+
+    private Enfermeiro buscarEnfermeiroPorUuid(UUID uuid) {
+        Usuario usuario = buscarUsuarioPorUuid(uuid);
+
+        if (usuario instanceof Enfermeiro enfermeiro) {
+            return enfermeiro;
+        }
+
+        throw new UsuarioDadosInvalidosException("O usuário informado não é um enfermeiro.");
     }
 
 }

@@ -14,7 +14,7 @@ import java.util.UUID;
 @DiscriminatorColumn(name = "tipo", discriminatorType = DiscriminatorType.STRING)
 @Getter
 @Setter
-public abstract sealed class UsuarioModel permits MedicoModel, PacienteModel, AdministradorModel, EnfermeiroModel {
+public abstract class UsuarioModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -29,13 +29,13 @@ public abstract sealed class UsuarioModel permits MedicoModel, PacienteModel, Ad
     @Column(nullable = false)
     private String senha;
 
-    @Column(nullable = false, columnDefinition = "boolean default true")
+    @Column(nullable = false)
     private boolean ativo;
 
-    @Column(nullable = false, columnDefinition = "boolean default false")
+    @Column(nullable = false)
     private boolean excluido;
 
-    @Column(nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(nullable = false)
     @CreationTimestamp
     private LocalDateTime criadoEm;
 
