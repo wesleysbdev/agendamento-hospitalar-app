@@ -6,6 +6,12 @@ spring:
     servlet:
       path: /api/v1
 
+  security:
+    jwt:
+      issuer: "agendamento-api"
+      secret-key: "2d57500fd645f84103d0fb2f277b629d1d7a3ecd8fc9774fdd345bddbe2eab5f"
+      expiration-seconds: 3600
+
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/agendamento-hospitalar}
     username: ${DB_USERNAME:postgres}
