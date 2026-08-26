@@ -29,9 +29,9 @@ public class EditarUsuarioUseCase implements GestaoEditarUsuario {
         PermissaoValidator.admin(usuarioAutenticado.tipo());
         Usuario usuario = UsuarioValidator.buscarUsuarioPorUuid(alterarEstadoDTO.usuarioUuid());
         if (alterarEstadoDTO.ativo()) {
-            usuario.inativarUsuario();
+            usuario.inativar();
         } else {
-            usuario.ativarUsuario();
+            usuario.ativar();
         }
         repository.salvar(usuario);
     }
@@ -40,7 +40,7 @@ public class EditarUsuarioUseCase implements GestaoEditarUsuario {
     public void excluirUsuario(UUID usuarioUuid, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.admin(usuarioAutenticado.tipo());
         Usuario usuario = UsuarioValidator.buscarUsuarioPorUuid(usuarioUuid);
-        usuario.excluirUsuario();
+        usuario.excluir();
         repository.salvar(usuario);
     }
 

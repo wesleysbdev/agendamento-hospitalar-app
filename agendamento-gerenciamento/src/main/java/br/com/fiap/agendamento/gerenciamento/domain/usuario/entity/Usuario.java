@@ -38,15 +38,15 @@ public abstract sealed class Usuario permits Administrador, Medico, Paciente, En
         this.email = email;
     }
 
-    public void inativarUsuario() {
+    public void inativar() {
         this.ativo = false;
     }
 
-    public void ativarUsuario() {
+    public void ativar() {
         this.ativo = true;
     }
 
-    public void excluirUsuario() {
+    public void excluir() {
         this.excluido = true;
     }
 
@@ -85,8 +85,16 @@ public abstract sealed class Usuario permits Administrador, Medico, Paciente, En
     public abstract TipoUsuario getTipo();
 
     private static void validarDadosObrigatorios(UUID uuid, String nome, Email email, String senha) {
-        if (uuid == null || nome == null || email == null || senha == null) {
-            throw new UsuarioDadosInvalidosException("Nome, email e senha são dados obrigatórios.");
+        if (uuid == null || uuid.toString().isBlank()) {
+            throw new UsuarioDadosInvalidosException("UUID é obrigatório.");
+        }
+
+        if (nome == null || nome.isBlank()) {
+            throw new UsuarioDadosInvalidosException("Nome é obrigatório.");
+        }
+
+        if (senha == null || senha.isBlank()) {
+            throw new UsuarioDadosInvalidosException("A senha é obrigatória.");
         }
     }
 }

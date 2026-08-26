@@ -1,17 +1,15 @@
 package br.com.fiap.agendamento.gerenciamento.domain.usuario.vo;
 
-import br.com.fiap.agendamento.gerenciamento.domain.constants.UsuarioConstants;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.enums.Uf;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioDadosInvalidosException;
 
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public record Crm(
         String numero,
-        String uf
+        Uf uf
 ) {
-    private static final Set<String> UFS_VALIDAS = UsuarioConstants.UNIDADES_FEDERATIVAS;
     // Regex que captura: de 3 a 7 números, separador opcional (hífen ou barra), e 2 letras
     private static final Pattern CRM_PATTERN = Pattern.compile("^(\\d{3,7})[-/]?([A-Z]{2})$");
     // Validação do formato do número (apenas dígitos, de 3 a 7 caracteres)
@@ -24,18 +22,12 @@ public record Crm(
         }
 
         String numeroLimpo = numero.trim();
-        String ufLimpa = uf.trim().toUpperCase();
-
-        if (!UFS_VALIDAS.contains(ufLimpa)) {
-            throw new UsuarioDadosInvalidosException("UF inválida: " + ufLimpa);
-        }
 
         if (!CRM_NUMERO_PATTERN.matcher(numeroLimpo).matches()) {
             throw new UsuarioDadosInvalidosException("O número do CRM deve conter de 3 a 7 dígitos numéricos.");
         }
 
         numero = numeroLimpo;
-        uf = ufLimpa;
     }
 
     public static Crm criarDeTextoCompleto(String crmCompleto) {
@@ -53,7 +45,7 @@ public record Crm(
         String numeroExtraido = matcher.group(1);
         String ufExtraida = matcher.group(2);
 
-        return new Crm(numeroExtraido, ufExtraida);
+        return new Crm(numeroExtraido, Uf.valueOf(ufExtraida.toUpperCase()));
     }
 
     @Override
