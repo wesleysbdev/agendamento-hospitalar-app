@@ -5,5 +5,5 @@ public record PacienteCadastroDTO(
         String email,
         String senha,
         String telefone
-) {
+) implements UsuarioCadastroDTO {
 }
