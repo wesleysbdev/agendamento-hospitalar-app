@@ -17,7 +17,8 @@ import java.util.UUID;
 public abstract class UsuarioModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_seq")
+    @SequenceGenerator(name = "usuario_seq", sequenceName = "usuarios_id_seq", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false, length = 200)

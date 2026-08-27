@@ -3,6 +3,8 @@ package br.com.fiap.agendamento.gerenciamento.infrastructure.autenticacao.adapte
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.out.GeradorTokenAutenticacao;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Usuario;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -38,6 +40,8 @@ public class TokenAdapter implements GeradorTokenAutenticacao {
                 .claim("nome", usuario.getNome())
                 .build();
 
-        return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        JwsHeader jwsHeader = JwsHeader.with(MacAlgorithm.HS256).build();
+
+        return encoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 }

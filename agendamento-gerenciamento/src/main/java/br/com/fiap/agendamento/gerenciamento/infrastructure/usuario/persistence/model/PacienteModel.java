@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class PacienteModel extends UsuarioModel {
 
-    @Column(nullable = false, length = 13)
+    @Column(length = 13)
     private String telefone;
 
 }
