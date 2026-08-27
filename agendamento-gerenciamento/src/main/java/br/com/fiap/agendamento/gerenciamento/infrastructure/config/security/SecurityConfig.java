@@ -20,8 +20,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/v1/autenticacao/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/usuarios/pacientes").permitAll()
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/autenticacao/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/usuarios/pacientes").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 ->

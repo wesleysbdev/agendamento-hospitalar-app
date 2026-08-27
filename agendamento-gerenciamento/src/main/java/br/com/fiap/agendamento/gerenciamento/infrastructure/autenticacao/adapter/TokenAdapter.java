@@ -35,6 +35,7 @@ public class TokenAdapter implements GeradorTokenAutenticacao {
                 .expiresAt(agora.plusSeconds(expirationSeconds))
                 .subject(usuario.getUuid().toString())
                 .claim("role", usuario.getTipo().name())
+                .claim("nome", usuario.getNome())
                 .build();
 
         return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
