@@ -5,19 +5,20 @@ import br.com.fiap.agendamento.gerenciamento.domain.hospital.entity.Hospital;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Medico;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Paciente;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
 public class Consulta {
 
     private final UUID uuid;
-    private LocalTime horario;
+    private LocalDateTime horario;
     private Medico medico;
     private Paciente paciente;
     private Hospital hospital;
     private ConsultaEstado estado;
 
-    public Consulta(UUID uuid, LocalTime horario, Medico medico, Paciente paciente, Hospital hospital, ConsultaEstado estado) {
+    public Consulta(UUID uuid, LocalDateTime horario, Medico medico, Paciente paciente, Hospital hospital, ConsultaEstado estado) {
         this.uuid = uuid;
         this.horario = horario;
         this.medico = medico;
@@ -30,7 +31,7 @@ public class Consulta {
         return uuid;
     }
 
-    public LocalTime getHorario() {
+    public LocalDateTime getHorario() {
         return horario;
     }
 
