@@ -23,6 +23,8 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/autenticacao/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/usuarios/pacientes").permitAll()
+                        //REMOVER LINHA DE CODIGO, LIBERADO APENAS PARA TESTES
+                        .requestMatchers(HttpMethod.POST, "/consulta/agendar").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 ->
