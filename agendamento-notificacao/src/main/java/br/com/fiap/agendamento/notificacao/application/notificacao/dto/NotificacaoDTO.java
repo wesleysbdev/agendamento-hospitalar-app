@@ -5,7 +5,6 @@ import br.com.fiap.agendamento.notificacao.domain.notificacao.enums.TipoNotifica
 public record NotificacaoDTO(
         String destinatario,
         String assunto,
-        String mensagem,
-        TipoNotificacao tipo
+        String mensagem
 ) {
 }

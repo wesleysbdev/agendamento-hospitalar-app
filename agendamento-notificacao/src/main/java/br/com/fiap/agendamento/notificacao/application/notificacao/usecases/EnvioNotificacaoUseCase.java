@@ -11,11 +11,9 @@ import java.util.UUID;
 public class EnvioNotificacaoUseCase implements GestaoNotificacao {
 
     private final NotificacaoRepository repository;
-    private final EnvioNotificacao envioNotificacao;
 
-    public EnvioNotificacaoUseCase(NotificacaoRepository repository, EnvioNotificacao envioNotificacao) {
+    public EnvioNotificacaoUseCase(NotificacaoRepository repository) {
         this.repository = repository;
-        this.envioNotificacao = envioNotificacao;
     }
 
     @Override
@@ -25,12 +23,10 @@ public class EnvioNotificacaoUseCase implements GestaoNotificacao {
                 notificacaoDTO.destinatario(),
                 notificacaoDTO.assunto(),
                 notificacaoDTO.mensagem(),
-                notificacaoDTO.tipo(),
                 null,
                 false
         );
 
-        envioNotificacao.enviar(notificacao);
         notificacao.marcarComoEnviada();
         repository.salvar(notificacao);
     }

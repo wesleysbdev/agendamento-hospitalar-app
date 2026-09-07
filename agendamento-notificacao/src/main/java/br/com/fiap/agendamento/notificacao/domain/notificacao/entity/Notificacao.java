@@ -12,17 +12,15 @@ public class Notificacao {
     private String destinatario;
     private String assunto;
     private String mensagem;
-    private TipoNotificacao tipo;
     private LocalDateTime dataEnvio;
     private boolean enviada;
 
-    public Notificacao(UUID uuid, String destinatario, String assunto, String mensagem, TipoNotificacao tipo, LocalDateTime dataEnvio, boolean enviada) {
-        validarDadosObrigatorios(uuid, destinatario, assunto, mensagem, tipo);
+    public Notificacao(UUID uuid, String destinatario, String assunto, String mensagem, LocalDateTime dataEnvio, boolean enviada) {
+        validarDadosObrigatorios(uuid, destinatario, assunto, mensagem);
         this.uuid = uuid;
         this.destinatario = destinatario;
         this.assunto = assunto;
         this.mensagem = mensagem;
-        this.tipo = tipo;
         this.dataEnvio = dataEnvio;
         this.enviada = enviada;
     }
@@ -48,10 +46,6 @@ public class Notificacao {
         return mensagem;
     }
 
-    public TipoNotificacao getTipo() {
-        return tipo;
-    }
-
     public LocalDateTime getDataEnvio() {
         return dataEnvio;
     }
@@ -60,7 +54,7 @@ public class Notificacao {
         return enviada;
     }
 
-    private static void validarDadosObrigatorios(UUID uuid, String destinatario, String assunto, String mensagem, TipoNotificacao tipo) {
+    private static void validarDadosObrigatorios(UUID uuid, String destinatario, String assunto, String mensagem) {
         if (uuid == null || uuid.toString().isBlank()) {
             throw new NotificacaoDadosInvalidosException("UUID é obrigatório.");
         }
@@ -75,10 +69,6 @@ public class Notificacao {
 
         if (mensagem == null || mensagem.isBlank()) {
             throw new NotificacaoDadosInvalidosException("Mensagem é obrigatória.");
-        }
-
-        if (tipo == null) {
-            throw new NotificacaoDadosInvalidosException("Tipo de notificação é obrigatório.");
         }
     }
 }

@@ -1,10 +1,10 @@
 package br.com.fiap.agendamento.notificacao.infrastructure.config.exception;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record ErroResposta(
-        Instant timestamp,
+        LocalDateTime timestamp,
         Integer status,
         String error,
         String message,

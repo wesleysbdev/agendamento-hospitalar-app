@@ -11,8 +11,7 @@ public class NotificacaoMapper {
         return new NotificacaoDTO(
                 request.destinatario(),
                 request.assunto(),
-                request.mensagem(),
-                request.tipo()
+                request.mensagem()
         );
     }
 }
