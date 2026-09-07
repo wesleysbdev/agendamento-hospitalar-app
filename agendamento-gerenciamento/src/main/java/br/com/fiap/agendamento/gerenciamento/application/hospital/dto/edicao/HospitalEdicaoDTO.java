@@ -7,16 +7,17 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.UUID;
 
-public interface HospitalEdicaoDTO {
-    UUID uuid();
-    String nome();
-    String endereco();
-    Telefone telefone();
-    DayOfWeek diaSemanaInicio();
-    DayOfWeek diaSemanaFim();
-    LocalTime horaInicio();
-    LocalTime horaFim();
-    Duration tempoLimiteCancelamento();
-    Duration tempoToleranciaPosConsulta();
-    Duration tempoMinimoConsulta();
+public record HospitalEdicaoDTO(
+        UUID uuid,
+        String nome,
+        String endereco,
+        Telefone telefone,
+        DayOfWeek diaSemanaInicio,
+        DayOfWeek diaSemanaFim,
+        LocalTime horaInicio,
+        LocalTime horaFim,
+        Duration tempoLimiteCancelamento,
+        Duration tempoToleranciaPosConsulta,
+        Duration tempoMinimoConsulta
+) {
 }
