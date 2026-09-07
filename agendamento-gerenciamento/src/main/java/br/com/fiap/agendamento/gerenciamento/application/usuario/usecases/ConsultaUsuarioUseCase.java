@@ -30,7 +30,7 @@ public class ConsultaUsuarioUseCase implements GestaoConsultaUsuario {
     @Override
     public UsuarioDTO buscarUsuarioPorUuid(UUID uuid, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.apenasOProprio(usuarioAutenticado, uuid);
-        Usuario usuario = buscarUsuarioPorUuid(uuid);
+        Usuario usuario = validarUsuarioPorUuid(uuid);
         return converterParaDTO(usuario);
     }
 
@@ -81,7 +81,7 @@ public class ConsultaUsuarioUseCase implements GestaoConsultaUsuario {
         };
     }
 
-    private Usuario buscarUsuarioPorUuid(UUID uuid) {
+    private Usuario validarUsuarioPorUuid(UUID uuid) {
         return repository.buscarPorUuid(uuid).orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
     }
 }
