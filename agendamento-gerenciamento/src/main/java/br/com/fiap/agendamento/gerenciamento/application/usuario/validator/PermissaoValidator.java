@@ -52,4 +52,11 @@ public abstract class PermissaoValidator {
         apenasOProprio(usuarioAutenticado, alvoUuid);
     }
 
+    public static void historicoPaciente(UsuarioAutenticado usuarioAutenticado, UUID pacienteUuid) {
+        verificaPermissao(usuarioAutenticado.tipo(), Set.of(TipoUsuario.PACIENTE, TipoUsuario.MEDICO, TipoUsuario.ENFERMEIRO));
+        if (usuarioAutenticado.tipo() == TipoUsuario.PACIENTE) {
+            apenasOProprio(usuarioAutenticado, pacienteUuid);
+        }
+    }
+
 }

@@ -1,0 +1,15 @@
+type Query {
+    historicoPaciente(pacienteUuid: ID!): [ConsultaHistorico!]!
+    consultasFuturas(pacienteUuid: ID!): [ConsultaHistorico!]!
+}
+
+type ConsultaHistorico {
+    uuid: ID!
+    horario: String!
+    medicoUuid: ID!
+    medicoNome: String!
+    hospitalUuid: ID!
+    hospitalNome: String!
+    hospitalEndereco: String!
+    estado: String!
+}
