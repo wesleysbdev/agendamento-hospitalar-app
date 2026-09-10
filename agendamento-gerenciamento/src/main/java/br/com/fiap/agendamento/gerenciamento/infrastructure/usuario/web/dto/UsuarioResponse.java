@@ -5,6 +5,7 @@ import java.util.UUID;
 public record UsuarioResponse(
         UUID uuid,
         String nome,
-        String email
+        String email,
+        boolean ativo
 ) {
 }

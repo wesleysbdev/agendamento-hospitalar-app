@@ -4,21 +4,35 @@ import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.cadastro.Ad
 import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.cadastro.EnfermeiroCadastroDTO;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.cadastro.MedicoCadastroDTO;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.cadastro.PacienteCadastroDTO;
+import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.edicao.*;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Usuario;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Email;
-import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.web.dto.*;
+import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.web.dto.UsuarioResponse;
+import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.web.dto.cadastro.AdministradorCadastroRequest;
+import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.web.dto.cadastro.EnfermeiroCadastroRequest;
+import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.web.dto.cadastro.MedicoCadastroRequest;
+import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.web.dto.cadastro.PacienteCadastroRequest;
+import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.web.dto.edicao.*;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface UsuarioRequestMapper {
 
-    AdministradorCadastroDTO paraDTO(AdministradorRequest request);
+    AdministradorCadastroDTO paraDTO(AdministradorCadastroRequest request);
 
-    EnfermeiroCadastroDTO paraDTO(EnfermeiroRequest request);
+    EnfermeiroCadastroDTO paraDTO(EnfermeiroCadastroRequest request);
 
-    MedicoCadastroDTO paraDTO(MedicoRequest request);
+    MedicoCadastroDTO paraDTO(MedicoCadastroRequest request);
 
-    PacienteCadastroDTO paraDTO(PacienteRequest request);
+    PacienteCadastroDTO paraDTO(PacienteCadastroRequest request);
+
+    AdministradorEdicaoDTO paraDTO(AdministradorEdicaoRequest request);
+
+    EnfermeiroEdicaoDTO paraDTO(EnfermeiroEdicaoRequest request);
+
+    MedicoEdicaoDTO paraDTO(MedicoEdicaoRequest request);
+
+    PacienteEdicaoDTO paraDTO(PacienteEdicaoRequest request);
 
     UsuarioResponse paraResponse(Usuario usuario);
 

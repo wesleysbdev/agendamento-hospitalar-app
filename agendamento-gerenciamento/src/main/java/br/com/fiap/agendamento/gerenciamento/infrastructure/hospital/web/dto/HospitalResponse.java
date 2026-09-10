@@ -11,13 +11,9 @@ public record HospitalResponse(
         String endereco,
         String telefone,
         boolean ativo,
-        boolean excluido,
         DayOfWeek diaSemanaInicio,
         DayOfWeek diaSemanaFim,
         LocalTime horaInicio,
-        LocalTime horaFim,
-        Duration tempoLimiteCancelamento,
-        Duration tempoToleranciaPosConsulta,
-        Duration tempoMinimoConsulta
+        LocalTime horaFim
 ) {
 }

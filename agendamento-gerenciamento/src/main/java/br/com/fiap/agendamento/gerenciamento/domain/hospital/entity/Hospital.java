@@ -39,6 +39,7 @@ public class Hospital {
             Duration tempoToleranciaPosConsulta,
             Duration tempoMinimoConsulta
     ) {
+        validarDadosCadastrais();
         this.uuid = uuid;
         this.nome = nome;
         this.endereco = endereco;
@@ -54,15 +55,17 @@ public class Hospital {
         this.tempoMinimoConsulta = tempoMinimoConsulta;
     }
 
+    private void validarDadosCadastrais() {
+
+    }
+
     public void inativar() {
         this.ativo = false;
     }
 
     public void ativar() {
         if (excluido) {
-            throw new HospitalDadosInvalidosException(
-                    "Hospital excluído não pode ser ativado."
-            );
+            throw new HospitalDadosInvalidosException("Hospital excluído não pode ser ativado.");
         }
         this.ativo = true;
     }

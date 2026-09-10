@@ -13,12 +13,19 @@ public record HospitalRequest(
         String endereco,
         @NotBlank(message = "O campo telefone é obrigatório.")
         String telefone,
+        @NotBlank(message = "O campo diaSemanaInicio é obrigatório.")
         DayOfWeek diaSemanaInicio,
+        @NotBlank(message = "O campo diaSemanaFim é obrigatório.")
         DayOfWeek diaSemanaFim,
+        @NotBlank(message = "O campo horaInicio é obrigatório.")
         LocalTime horaInicio,
+        @NotBlank(message = "O campo horaFim é obrigatório.")
         LocalTime horaFim,
+        @NotBlank(message = "O campo tempoLimiteCancelamento é obrigatório.")
         Duration tempoLimiteCancelamento,
+        @NotBlank(message = "O campo tempoToleranciaPosConsulta é obrigatório.")
         Duration tempoToleranciaPosConsulta,
+        @NotBlank(message = "O campo tempoMinimoConsulta é obrigatório.")
         Duration tempoMinimoConsulta
 ) {
 }
