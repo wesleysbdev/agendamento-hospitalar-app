@@ -39,7 +39,8 @@ public class Hospital {
             Duration tempoToleranciaPosConsulta,
             Duration tempoMinimoConsulta
     ) {
-        validarDadosCadastrais();
+        validarDadosObrigatorios(uuid, nome, endereco, telefone, diaSemanaInicio, diaSemanaFim, horaInicio, horaFim, tempoLimiteCancelamento, tempoToleranciaPosConsulta, tempoMinimoConsulta);
+        validarDadosCadastrais(diaSemanaInicio, diaSemanaFim, horaInicio, horaFim);
         this.uuid = uuid;
         this.nome = nome;
         this.endereco = endereco;
@@ -55,8 +56,59 @@ public class Hospital {
         this.tempoMinimoConsulta = tempoMinimoConsulta;
     }
 
-    private void validarDadosCadastrais() {
+    private void validarDadosObrigatorios(UUID uuid, String nome, String endereco, Telefone telefone, DayOfWeek diaSemanaInicio, DayOfWeek diaSemanaFim, LocalTime horaInicio, LocalTime horaFim, Duration tempoLimiteCancelamento, Duration tempoToleranciaPosConsulta, Duration tempoMinimoConsulta) {
+        if (nome == null || nome.isBlank()) {
+            throw new HospitalDadosInvalidosException("O nome do hospital é obrigatório.");
+        }
 
+        if (endereco == null || endereco.isBlank()) {
+            throw new HospitalDadosInvalidosException("O endereço do hospital é obrigatório.");
+        }
+
+        if (telefone == null) {
+            throw new HospitalDadosInvalidosException("O telefone do hospital é obrigatório.");
+        }
+
+        if (diaSemanaInicio == null) {
+            throw new HospitalDadosInvalidosException("O dia da semana inicial é obrigatório.");
+        }
+
+        if (diaSemanaFim == null) {
+            throw new HospitalDadosInvalidosException("O dia da semana final é obrigatório.");
+        }
+
+        if (horaInicio == null) {
+            throw new HospitalDadosInvalidosException("A hora inicial é obrigatória.");
+        }
+
+        if (horaFim == null) {
+            throw new HospitalDadosInvalidosException("A hora final é obrigatória.");
+        }
+
+        if (tempoLimiteCancelamento == null || tempoLimiteCancelamento.isNegative()) {
+            throw new HospitalDadosInvalidosException("O tempo limite de cancelamento não pode ser negativo.");
+        }
+
+        if (tempoToleranciaPosConsulta == null || tempoToleranciaPosConsulta.isNegative()) {
+            throw new HospitalDadosInvalidosException("O tempo de tolerância após a consulta não pode ser negativo.");
+        }
+
+        if (tempoMinimoConsulta == null || tempoMinimoConsulta.isZero() || tempoMinimoConsulta.isNegative()) {
+            throw new HospitalDadosInvalidosException("O tempo mínimo de consulta deve ser maior que zero.");
+        }
+    }
+
+    private void validarDadosCadastrais(DayOfWeek diaSemanaInicio, DayOfWeek diaSemanaFim, LocalTime horaInicio, LocalTime horaFim) {
+        if (diaSemanaFim.compareTo(diaSemanaInicio) <= 0) {
+//            < 0  -> duration1 é menor
+//            = 0  -> são iguais
+//            > 0  -> duration1 é maior
+            throw new HospitalDadosInvalidosException("O dia da semana final deve ser posterior ao dia da semana inicial.");
+        }
+
+        if (!horaFim.isAfter(horaInicio)) {
+            throw new HospitalDadosInvalidosException("A hora final deve ser posterior à hora inicial.");
+        }
     }
 
     public void inativar() {

@@ -8,7 +8,6 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 public record HospitalEdicaoRequest(
-        UUID uuid,
         @NotBlank(message = "O campo nome é obrigatório.")
         String nome,
         @NotBlank(message = "O campo endereco é obrigatório.")

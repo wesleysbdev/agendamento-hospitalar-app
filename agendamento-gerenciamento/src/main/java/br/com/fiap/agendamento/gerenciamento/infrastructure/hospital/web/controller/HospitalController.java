@@ -57,10 +57,10 @@ public class HospitalController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HospitalResponse alterarHospital(@RequestBody @Valid HospitalEdicaoRequest request) {
+    public HospitalResponse alterarHospital(@RequestBody @Valid HospitalRequest request) {
         UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
         var hospitalEdicaoDTO = requestMapper.paraDTO(request);
-        Hospital hospital = editarHospital.alterarDadosHospital(hospitalEdicaoDTO);
+//        Hospital hospital = editarHospital.alterarDadosHospital(hospitalEdicaoDTO);
         return requestMapper.paraResponse(hospital);
     }
 
