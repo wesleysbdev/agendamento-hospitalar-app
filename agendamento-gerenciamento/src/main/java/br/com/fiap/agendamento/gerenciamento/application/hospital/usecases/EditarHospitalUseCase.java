@@ -1,6 +1,7 @@
 package br.com.fiap.agendamento.gerenciamento.application.hospital.usecases;
 
-import br.com.fiap.agendamento.gerenciamento.application.hospital.dto.edicao.HospitalEdicaoDTO;
+import br.com.fiap.agendamento.gerenciamento.application.dto.UsuarioAutenticado;
+import br.com.fiap.agendamento.gerenciamento.application.hospital.dto.cadastro.HospitalCadastroDTO;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.in.GestaoEditarHospital;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.out.HospitalRepository;
 import br.com.fiap.agendamento.gerenciamento.domain.hospital.entity.Hospital;
@@ -17,15 +18,12 @@ public class EditarHospitalUseCase implements GestaoEditarHospital {
     }
 
     @Override
-    public Hospital alterarDadosHospital(HospitalEdicaoDTO hospitalEdicaoDTO) {
-        Hospital hospital = buscarHospitalPorUuid(hospitalEdicaoDTO.uuid());
-        hospital = new Hospital(
-                hospital.getUuid(),
+    public Hospital alterarDadosHospital(UUID hospitalUuid, HospitalCadastroDTO hospitalEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
+        Hospital hospital = buscarHospitalPorUuid(hospitalUuid);
+        hospital.alterarDados(
                 hospitalEdicaoDTO.nome(),
                 hospitalEdicaoDTO.endereco(),
                 hospitalEdicaoDTO.telefone(),
-                hospital.isAtivo(),
-                hospital.isExcluido(),
                 hospitalEdicaoDTO.diaSemanaInicio(),
                 hospitalEdicaoDTO.diaSemanaFim(),
                 hospitalEdicaoDTO.horaInicio(),
@@ -38,21 +36,21 @@ public class EditarHospitalUseCase implements GestaoEditarHospital {
     }
 
     @Override
-    public Hospital ativarHospital(UUID hospitalUuid) {
+    public Hospital ativarHospital(UUID hospitalUuid, UsuarioAutenticado usuarioAutenticado) {
         Hospital hospital = buscarHospitalPorUuid(hospitalUuid);
         hospital.ativar();
         return hospitalRepository.salvar(hospital);
     }
 
     @Override
-    public Hospital inativarHospital(UUID hospitalUuid) {
+    public Hospital inativarHospital(UUID hospitalUuid, UsuarioAutenticado usuarioAutenticado) {
         Hospital hospital = buscarHospitalPorUuid(hospitalUuid);
         hospital.inativar();
         return hospitalRepository.salvar(hospital);
     }
 
     @Override
-    public Hospital excluirHospital(UUID hospitalUuid) {
+    public Hospital excluirHospital(UUID hospitalUuid, UsuarioAutenticado usuarioAutenticado) {
         Hospital hospital = buscarHospitalPorUuid(hospitalUuid);
         hospital.excluir();
         return hospitalRepository.salvar(hospital);

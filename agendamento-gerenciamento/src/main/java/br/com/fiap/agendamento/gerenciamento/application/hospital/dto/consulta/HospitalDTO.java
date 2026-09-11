@@ -13,7 +13,6 @@ public interface HospitalDTO {
     String endereco();
     Telefone telefone();
     boolean ativo();
-    boolean excluido();
     DayOfWeek diaSemanaInicio();
     DayOfWeek diaSemanaFim();
     LocalTime horaInicio();

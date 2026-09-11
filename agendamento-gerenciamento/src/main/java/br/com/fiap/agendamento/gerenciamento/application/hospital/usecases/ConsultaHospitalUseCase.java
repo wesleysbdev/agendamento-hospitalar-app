@@ -1,5 +1,6 @@
 package br.com.fiap.agendamento.gerenciamento.application.hospital.usecases;
 
+import br.com.fiap.agendamento.gerenciamento.application.dto.UsuarioAutenticado;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.dto.consulta.HospitalDTO;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.in.GestaoConsultaHospital;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.out.HospitalRepository;
@@ -18,14 +19,14 @@ public class ConsultaHospitalUseCase implements GestaoConsultaHospital {
     }
 
     @Override
-    public List<HospitalDTO> listarHospitais() {
+    public List<HospitalDTO> listarHospitais(UsuarioAutenticado usuarioAutenticado) {
         List<Hospital> hospitais = hospitalRepository.listar();
         return hospitais.stream().map(this::converterParaDTO).toList();
     }
 
     @Override
-    public HospitalDTO buscarHospitalPorUuid(UUID uuid) {
-        Hospital hospital = validarHospitalPorUuid(uuid);
+    public HospitalDTO buscarHospitalPorUuid(UUID uuid, UsuarioAutenticado usuarioAutenticado) {
+        Hospital hospital = buscarHospitalPorUuid(uuid);
         return converterParaDTO(hospital);
     }
 
@@ -54,11 +55,6 @@ public class ConsultaHospitalUseCase implements GestaoConsultaHospital {
             @Override
             public boolean ativo() {
                 return hospital.isAtivo();
-            }
-
-            @Override
-            public boolean excluido() {
-                return hospital.isExcluido();
             }
 
             @Override
@@ -98,7 +94,7 @@ public class ConsultaHospitalUseCase implements GestaoConsultaHospital {
         };
     }
 
-    private Hospital validarHospitalPorUuid(UUID uuid) {
+    private Hospital buscarHospitalPorUuid(UUID uuid) {
         return hospitalRepository.buscarPorUuid(uuid)
                 .orElseThrow(() -> new HospitalNaoEncontradoException("Hospital não encontrado."));
     }

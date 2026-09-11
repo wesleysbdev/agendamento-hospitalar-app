@@ -1,6 +1,8 @@
 package br.com.fiap.agendamento.gerenciamento.domain.hospital.entity;
 
 import br.com.fiap.agendamento.gerenciamento.domain.hospital.exception.HospitalDadosInvalidosException;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioDadosInvalidosException;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Email;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
 
 import java.time.DayOfWeek;
@@ -39,7 +41,8 @@ public class Hospital {
             Duration tempoToleranciaPosConsulta,
             Duration tempoMinimoConsulta
     ) {
-        validarDadosObrigatorios(uuid, nome, endereco, telefone, diaSemanaInicio, diaSemanaFim, horaInicio, horaFim, tempoLimiteCancelamento, tempoToleranciaPosConsulta, tempoMinimoConsulta);
+        validarIdentificador(uuid);
+        validarDadosObrigatorios(nome, endereco, telefone, diaSemanaInicio, diaSemanaFim, horaInicio, horaFim, tempoLimiteCancelamento, tempoToleranciaPosConsulta, tempoMinimoConsulta);
         validarDadosCadastrais(diaSemanaInicio, diaSemanaFim, horaInicio, horaFim);
         this.uuid = uuid;
         this.nome = nome;
@@ -56,7 +59,39 @@ public class Hospital {
         this.tempoMinimoConsulta = tempoMinimoConsulta;
     }
 
-    private void validarDadosObrigatorios(UUID uuid, String nome, String endereco, Telefone telefone, DayOfWeek diaSemanaInicio, DayOfWeek diaSemanaFim, LocalTime horaInicio, LocalTime horaFim, Duration tempoLimiteCancelamento, Duration tempoToleranciaPosConsulta, Duration tempoMinimoConsulta) {
+    public void alterarDados(
+            String nome,
+            String endereco,
+            Telefone telefone,
+            DayOfWeek diaSemanaInicio,
+            DayOfWeek diaSemanaFim,
+            LocalTime horaInicio,
+            LocalTime horaFim,
+            Duration tempoLimiteCancelamento,
+            Duration tempoToleranciaPosConsulta,
+            Duration tempoMinimoConsulta
+    ) {
+        validarDadosObrigatorios(nome, endereco, telefone, diaSemanaInicio, diaSemanaFim, horaInicio, horaFim, tempoLimiteCancelamento, tempoToleranciaPosConsulta, tempoMinimoConsulta);
+        validarDadosCadastrais(diaSemanaInicio, diaSemanaFim, horaInicio, horaFim);
+        this.nome = nome;
+        this.endereco = endereco;
+        this.telefone = telefone;
+        this.diaSemanaInicio = diaSemanaInicio;
+        this.diaSemanaFim = diaSemanaFim;
+        this.horaInicio = horaInicio;
+        this.horaFim = horaFim;
+        this.tempoLimiteCancelamento = tempoLimiteCancelamento;
+        this.tempoToleranciaPosConsulta = tempoToleranciaPosConsulta;
+        this.tempoMinimoConsulta = tempoMinimoConsulta;
+    }
+
+    private static void validarIdentificador(UUID uuid) {
+        if (uuid == null || uuid.toString().isBlank()) {
+            throw new UsuarioDadosInvalidosException("UUID é obrigatório.");
+        }
+    }
+
+    private void validarDadosObrigatorios(String nome, String endereco, Telefone telefone, DayOfWeek diaSemanaInicio, DayOfWeek diaSemanaFim, LocalTime horaInicio, LocalTime horaFim, Duration tempoLimiteCancelamento, Duration tempoToleranciaPosConsulta, Duration tempoMinimoConsulta) {
         if (nome == null || nome.isBlank()) {
             throw new HospitalDadosInvalidosException("O nome do hospital é obrigatório.");
         }

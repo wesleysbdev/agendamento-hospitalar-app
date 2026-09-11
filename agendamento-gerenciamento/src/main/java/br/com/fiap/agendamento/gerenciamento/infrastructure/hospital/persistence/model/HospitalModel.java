@@ -32,26 +32,26 @@ public class HospitalModel {
     private String telefone;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "dia_semana_inicio", nullable = false, length = 20)
+    @Column(nullable = false, length = 9)
     private DayOfWeek diaSemanaInicio;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "dia_semana_fim", nullable = false, length = 20)
+    @Column(nullable = false, length = 9)
     private DayOfWeek diaSemanaFim;
 
-    @Column(name = "hora_inicio", nullable = false)
+    @Column(nullable = false)
     private LocalTime horaInicio;
 
-    @Column(name = "hora_fim", nullable = false)
+    @Column(nullable = false)
     private LocalTime horaFim;
 
-    @Column(name = "tempo_limite_cancelamento_minutos", nullable = false)
+    @Column(nullable = false)
     private Integer tempoLimiteCancelamentoMinutos;
 
-    @Column(name = "tempo_tolerancia_pos_consulta_minutos", nullable = false)
+    @Column(nullable = false)
     private Integer tempoToleranciaPosConsultaMinutos;
 
-    @Column(name = "tempo_minimo_consulta_minutos", nullable = false)
+    @Column(nullable = false)
     private Integer tempoMinimoConsultaMinutos;
 
     @Column(nullable = false)

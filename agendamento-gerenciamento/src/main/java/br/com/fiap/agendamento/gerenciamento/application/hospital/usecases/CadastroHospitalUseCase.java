@@ -1,5 +1,6 @@
 package br.com.fiap.agendamento.gerenciamento.application.hospital.usecases;
 
+import br.com.fiap.agendamento.gerenciamento.application.dto.UsuarioAutenticado;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.dto.cadastro.HospitalCadastroDTO;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.in.GestaoCadastroHospital;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.out.HospitalRepository;
@@ -16,7 +17,7 @@ public class CadastroHospitalUseCase implements GestaoCadastroHospital {
     }
 
     @Override
-    public Hospital cadastrar(HospitalCadastroDTO hospitalCadastroDTO) {
+    public Hospital cadastrar(HospitalCadastroDTO hospitalCadastroDTO, UsuarioAutenticado usuarioAutenticado) {
         Hospital hospital = new Hospital(
                 UUID.randomUUID(),
                 hospitalCadastroDTO.nome(),
