@@ -138,15 +138,18 @@ public class UsuarioController {
         );
     }
 
-    @PatchMapping("/{uuid}/estado")
+    @PatchMapping("/{uuid}/ativar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void alterarEstado(@PathVariable UUID uuid, @RequestBody @Valid AlterarEstadoRequest request) {
+    public void ativarUsuario(@PathVariable UUID uuid, @RequestBody @Valid AlterarEstadoRequest request) {
         UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
-        edicaoUsuario.mudarEstadoDoUsuario(
-                uuid,
-                new AlterarEstadoDTO(request.ativo()),
-                usuarioAutenticado
-        );
+        edicaoUsuario.ativarUsuario(uuid, usuarioAutenticado);
+    }
+
+    @PatchMapping("/{uuid}/inativar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativarUsuario(@PathVariable UUID uuid, @RequestBody @Valid AlterarEstadoRequest request) {
+        UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
+        edicaoUsuario.inativarUsuario(uuid, usuarioAutenticado);
     }
 
     @DeleteMapping("/{uuid}")

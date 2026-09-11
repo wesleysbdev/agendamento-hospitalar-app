@@ -26,14 +26,18 @@ public class EditarUsuarioUseCase implements GestaoEditarUsuario {
     }
 
     @Override
-    public Usuario mudarEstadoDoUsuario(UUID usuarioUuid, AlterarEstadoDTO alterarEstadoDTO, UsuarioAutenticado usuarioAutenticado) {
+    public Usuario ativarUsuario(UUID usuarioUuid, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.admin(usuarioAutenticado.tipo());
         Usuario usuario = buscarUsuarioPorUuid(usuarioUuid);
-        if (alterarEstadoDTO.ativo()) {
-            usuario.ativar();
-        } else {
-            usuario.inativar();
-        }
+        usuario.ativar();
+        return repository.salvar(usuario);
+    }
+
+    @Override
+    public Usuario inativarUsuario(UUID usuarioUuid, UsuarioAutenticado usuarioAutenticado) {
+        PermissaoValidator.admin(usuarioAutenticado.tipo());
+        Usuario usuario = buscarUsuarioPorUuid(usuarioUuid);
+        usuario.inativar();
         return repository.salvar(usuario);
     }
 

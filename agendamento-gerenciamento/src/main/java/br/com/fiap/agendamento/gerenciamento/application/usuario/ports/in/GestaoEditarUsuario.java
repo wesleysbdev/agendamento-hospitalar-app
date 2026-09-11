@@ -7,7 +7,9 @@ import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Usuario;
 import java.util.UUID;
 
 public interface GestaoEditarUsuario {
-    Usuario mudarEstadoDoUsuario(UUID usuarioUuid, AlterarEstadoDTO alterarEstadoDTO, UsuarioAutenticado usuarioAutenticado);
+    Usuario ativarUsuario(UUID usuarioUuid, UsuarioAutenticado usuarioAutenticado);
+
+    Usuario inativarUsuario(UUID usuarioUuid, UsuarioAutenticado usuarioAutenticado);
 
     Usuario excluirUsuario(UUID usuarioUuid, UsuarioAutenticado usuarioAutenticado);
 
