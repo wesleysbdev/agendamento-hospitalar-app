@@ -1,12 +1,12 @@
 package br.com.fiap.agendamento.gerenciamento.domain.hospital.entity;
 
+import br.com.fiap.agendamento.gerenciamento.domain.hospital.exception.HospitalDadosInvalidosException;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
+
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.UUID;
-
-import br.com.fiap.agendamento.gerenciamento.domain.hospital.exception.HospitalDadosInvalidosException;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
 
 public class Hospital {
 
@@ -57,6 +57,12 @@ public class Hospital {
         this.tempoMinimoConsulta = tempoMinimoConsulta;
     }
 
+    private static void validarIdentificador(UUID uuid) {
+        if (uuid == null || uuid.toString().isBlank()) {
+            throw new HospitalDadosInvalidosException("UUID é obrigatório.");
+        }
+    }
+
     public void alterarDados(
             String nome,
             String endereco,
@@ -81,12 +87,6 @@ public class Hospital {
         this.tempoLimiteCancelamento = tempoLimiteCancelamento;
         this.tempoToleranciaPosConsulta = tempoToleranciaPosConsulta;
         this.tempoMinimoConsulta = tempoMinimoConsulta;
-    }
-
-    private static void validarIdentificador(UUID uuid) {
-        if (uuid == null || uuid.toString().isBlank()) {
-            throw new HospitalDadosInvalidosException	("UUID é obrigatório.");
-        }
     }
 
     private void validarDadosObrigatorios(String nome, String endereco, Telefone telefone, DayOfWeek diaSemanaInicio, DayOfWeek diaSemanaFim, LocalTime horaInicio, LocalTime horaFim, Duration tempoLimiteCancelamento, Duration tempoToleranciaPosConsulta, Duration tempoMinimoConsulta) {
@@ -157,6 +157,20 @@ public class Hospital {
 
     public void excluir() {
         this.excluido = true;
+    }
+
+    public boolean funcionaNoDia(DayOfWeek diaDaSemana) {
+        if (diaDaSemana == null) {
+            return false;
+        }
+        return diaDaSemana.compareTo(diaSemanaInicio) >= 0 && diaDaSemana.compareTo(diaSemanaFim) <= 0;
+    }
+
+    public boolean funcionaNoHorario(LocalTime horario) {
+        if (horario == null) {
+            return false;
+        }
+        return !horario.isBefore(horaInicio) && !horario.isAfter(horaFim);
     }
 
     public UUID getUuid() {

@@ -27,30 +27,18 @@ import java.util.UUID;
 public class ConsultaModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "consulta_id_seq")
-    @SequenceGenerator(name = "consulta_id_seq", sequenceName = "consulta_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "consultas_id_seq")
+    @SequenceGenerator(name = "consultas_id_seq", sequenceName = "consultas_id_seq", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false)
     private LocalDateTime horario;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "medico_id", nullable = false)
-    private MedicoModel medico;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "paciente_id", nullable = false)
-    private PacienteModel paciente;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "hospital_id", nullable = false)
-    private HospitalModel hospital;
-
     @Column(nullable = false)
     private String status;
 
-    @CreationTimestamp
     @Column(nullable = false, updatable = false)
+    @CreationTimestamp
     private LocalDateTime criadoEm;
 
     @Column(nullable = false, unique = true, updatable = false)

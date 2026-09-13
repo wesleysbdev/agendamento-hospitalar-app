@@ -36,7 +36,7 @@ public abstract class UsuarioModel {
     @Column(nullable = false)
     private boolean excluido;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime criadoEm;
 

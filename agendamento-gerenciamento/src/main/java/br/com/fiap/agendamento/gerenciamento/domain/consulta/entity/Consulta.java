@@ -57,7 +57,6 @@ public class Consulta {
 
 	public void cancelar() {
 		if (status != StatusConsulta.AGENDADA && status != StatusConsulta.CONFIRMADA) {
-
 			throw new ConsultaDadosInvalidosException("A consulta não pode ser cancelada");
 		}
 
@@ -66,7 +65,6 @@ public class Consulta {
 
 	public void realizar() {
 		if (status != StatusConsulta.AGENDADA && status != StatusConsulta.CONFIRMADA) {
-
 			throw new ConsultaDadosInvalidosException("A consulta não pode ser realizada");
 		}
 

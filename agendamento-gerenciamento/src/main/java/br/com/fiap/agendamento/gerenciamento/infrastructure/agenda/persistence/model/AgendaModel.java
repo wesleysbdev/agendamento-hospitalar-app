@@ -1,35 +1,41 @@
 package br.com.fiap.agendamento.gerenciamento.infrastructure.agenda.persistence.model;
 
+import br.com.fiap.agendamento.gerenciamento.infrastructure.hospital.persistence.model.HospitalModel;
+import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.persistence.model.UsuarioModel;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalTime;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "agenda")
+@Table(name = "agendas")
 @Getter
 @Setter
 public class AgendaModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "agenda_seq")
-    @SequenceGenerator(name = "agenda_seq", sequenceName = "agenda_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "agendas_seq")
+    @SequenceGenerator(name = "agendas_seq", sequenceName = "agendas_id_seq", allocationSize = 1)
     private Long id;
 
     @Column(nullable = false, unique = true, length = 36)
     private UUID uuid;
 
-    @Column(nullable = false, length = 36)
-    private UUID medicoUuid;
+    @ManyToOne
+    private UsuarioModel medico;
 
-    @Column(nullable = false, length = 36)
-    private UUID hospitalUuid;
+    @ManyToOne
+    private HospitalModel hospital;
 
-    @ElementCollection
-    @CollectionTable(name = "agenda_horarios", joinColumns = @JoinColumn(name = "agenda_id"))
-    @Column(name = "horario")
-    private List<LocalTime> horarios;
+    @Column(nullable = false, updatable = false)
+    @CreationTimestamp
+    private LocalDateTime criadoEm;
+
+//    @ElementCollection
+//    @CollectionTable(name = "agenda_horarios", joinColumns = @JoinColumn(name = "agenda_id"))
+//    @Column(name = "horario")
+//    private List<LocalTime> horarios;
 }
