@@ -1,0 +1,67 @@
+package br.com.fiap.agendamento.gerenciamento.domain.agenda.entity;
+
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.Objects;
+import java.util.UUID;
+
+import br.com.fiap.agendamento.gerenciamento.domain.agenda.exception.AgendaDadosInvalidosException;
+
+public class HorarioAgenda {
+
+    private final UUID uuid;
+    private final DayOfWeek diaSemana;
+    private final LocalTime horario;
+
+    public HorarioAgenda(
+            UUID uuid,
+            DayOfWeek diaSemana,
+            LocalTime horario
+    ) {
+        if (uuid == null) {
+            throw new AgendaDadosInvalidosException("UUID é obrigatório");
+        }
+
+        if (diaSemana == null) {
+            throw new AgendaDadosInvalidosException(
+                    "Dia da semana é obrigatório"
+            );
+        }
+
+        if (horario == null) {
+            throw new AgendaDadosInvalidosException	(
+                    "Horário é obrigatório"
+            );
+        }
+
+        this.uuid = uuid;
+        this.diaSemana = diaSemana;
+        this.horario = horario;
+    }
+
+    public UUID getUuid() {
+		return uuid;
+	}
+
+	public DayOfWeek getDiaSemana() {
+		return diaSemana;
+	}
+
+	public LocalTime getHorario() {
+		return horario;
+	}
+
+	@Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HorarioAgenda outro)) return false;
+
+        return diaSemana == outro.diaSemana
+                && horario.equals(outro.horario);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(diaSemana, horario);
+    }
+}

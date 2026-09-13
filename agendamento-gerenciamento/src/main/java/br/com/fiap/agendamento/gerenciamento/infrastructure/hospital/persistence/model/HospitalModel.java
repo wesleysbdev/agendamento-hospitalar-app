@@ -50,7 +50,7 @@ public class HospitalModel {
 
     @Column(nullable = false)
     private Integer tempoToleranciaPosConsultaMinutos;
-
+	
     @Column(nullable = false)
     private Integer tempoMinimoConsultaMinutos;
 

@@ -1,14 +1,12 @@
 package br.com.fiap.agendamento.gerenciamento.domain.hospital.entity;
 
-import br.com.fiap.agendamento.gerenciamento.domain.hospital.exception.HospitalDadosInvalidosException;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioDadosInvalidosException;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Email;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
-
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.UUID;
+
+import br.com.fiap.agendamento.gerenciamento.domain.hospital.exception.HospitalDadosInvalidosException;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
 
 public class Hospital {
 
@@ -87,7 +85,7 @@ public class Hospital {
 
     private static void validarIdentificador(UUID uuid) {
         if (uuid == null || uuid.toString().isBlank()) {
-            throw new UsuarioDadosInvalidosException("UUID é obrigatório.");
+            throw new HospitalDadosInvalidosException	("UUID é obrigatório.");
         }
     }
 
