@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.UUID;
 
 public interface GestaoConsultaAgenda {
-    List<AgendaDTO> listarAgendas();
-
-    AgendaDTO buscarAgendaPorUuid(UUID uuid);
-
-    List<AgendaDTO> buscarAgendasPorMedico(UUID medicoUuid);
-
-    List<AgendaDTO> buscarAgendasPorHospital(UUID hospitalUuid);
+//    List<AgendaDTO> listarAgendas();
+//
+//    AgendaDTO buscarAgendaPorUuid(UUID uuid);
+//
+//    List<AgendaDTO> buscarAgendasPorMedico(UUID medicoUuid);
+//
+//    List<AgendaDTO> buscarAgendasPorHospital(UUID hospitalUuid);
 }

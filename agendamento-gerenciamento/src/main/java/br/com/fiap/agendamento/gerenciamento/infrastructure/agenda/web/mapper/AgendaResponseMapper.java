@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface AgendaResponseMapper {
 
-    AgendaResponse paraResponse(AgendaDTO agenda);
+//    AgendaResponse paraResponse(AgendaDTO agenda);
 }

@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface AgendaRequestMapper {
 
-    AgendaCadastroDTO paraDTO(AgendaRequest request);
-
-    AgendaResponse paraResponse(Agenda agenda);
+//    AgendaCadastroDTO paraDTO(AgendaRequest request);
+//
+//    AgendaResponse paraResponse(Agenda agenda);
 }

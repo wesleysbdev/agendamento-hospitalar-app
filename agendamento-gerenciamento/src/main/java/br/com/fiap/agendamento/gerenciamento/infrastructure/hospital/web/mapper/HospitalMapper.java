@@ -14,29 +14,29 @@ import java.time.Duration;
 @Mapper(componentModel = "spring")
 public interface HospitalMapper {
 
-    @Mapping(
-            target = "tempoLimiteCancelamento",
-            source = "tempoLimiteCancelamentoMinutos"
-    )
-    @Mapping(
-            target = "tempoToleranciaPosConsulta",
-            source = "tempoToleranciaPosConsultaMinutos"
-    )
-    @Mapping(
-            target = "tempoMinimoConsulta",
-            source = "tempoMinimoConsultaMinutos"
-    )
-    HospitalCadastroDTO paraDTO(HospitalRequest request);
-
-    HospitalResponse paraResponse(Hospital hospital);
-
-    HospitalResponse paraResponse(HospitalDTO hospital);
-
-    default Duration map(Integer minutos) {
-        return minutos == null
-                ? null
-                : Duration.ofMinutes(minutos);
-    }
+//    @Mapping(
+//            target = "tempoLimiteCancelamento",
+//            source = "tempoLimiteCancelamentoMinutos"
+//    )
+//    @Mapping(
+//            target = "tempoToleranciaPosConsulta",
+//            source = "tempoToleranciaPosConsultaMinutos"
+//    )
+//    @Mapping(
+//            target = "tempoMinimoConsulta",
+//            source = "tempoMinimoConsultaMinutos"
+//    )
+//    HospitalCadastroDTO paraDTO(HospitalRequest request);
+//
+//    HospitalResponse paraResponse(Hospital hospital);
+//
+//    HospitalResponse paraResponse(HospitalDTO hospital);
+//
+//    default Duration map(Integer minutos) {
+//        return minutos == null
+//                ? null
+//                : Duration.ofMinutes(minutos);
+//    }
 }
 
 

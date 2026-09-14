@@ -29,22 +29,22 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
         this.hospitalRepository = hospitalRepository;
     }
 
-    public Agenda cadastrar(AgendaCadastroDTO agendaCadastro) {
-        Medico medico = usuarioRepository.buscarPorUuid(agendaCadastro.medicoUuid())
-                .filter(usuario -> usuario instanceof Medico)
-                .map(usuario -> (Medico) usuario)
-                .orElseThrow(() -> new UsuarioNaoEncontradoException("Médico não encontrado"));
-
-        Hospital hospital = hospitalRepository.buscarPorUuid(agendaCadastro.hospitalUuid())
-                .orElseThrow(() -> new HospitalNaoEncontradoException("Hospital não encontrado"));
-
-        Agenda agenda = new Agenda(
-                UUID.randomUUID(),
-                medico,
-                hospital,
-                agendaCadastro.horarios()
-        );
-
-        return agendaRepository.salvar(agenda);
-    }
+//    public Agenda cadastrar(AgendaCadastroDTO agendaCadastro) {
+//        Medico medico = usuarioRepository.buscarPorUuid(agendaCadastro.medicoUuid())
+//                .filter(usuario -> usuario instanceof Medico)
+//                .map(usuario -> (Medico) usuario)
+//                .orElseThrow(() -> new UsuarioNaoEncontradoException("Médico não encontrado"));
+//
+//        Hospital hospital = hospitalRepository.buscarPorUuid(agendaCadastro.hospitalUuid())
+//                .orElseThrow(() -> new HospitalNaoEncontradoException("Hospital não encontrado"));
+//
+//        Agenda agenda = new Agenda(
+//                UUID.randomUUID(),
+//                medico,
+//                hospital,
+//                agendaCadastro.horarios()
+//        );
+//
+//        return agendaRepository.salvar(agenda);
+//    }
 }

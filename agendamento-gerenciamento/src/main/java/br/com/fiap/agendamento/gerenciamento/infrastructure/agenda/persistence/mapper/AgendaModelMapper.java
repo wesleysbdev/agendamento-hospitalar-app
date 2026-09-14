@@ -10,9 +10,9 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface AgendaModelMapper {
 
-    Agenda paraEntidade(AgendaModel model);
-
-    AgendaModel paraModelo(Agenda entidade);
-
-    void atualizarModelo(Agenda agenda, @MappingTarget AgendaModel existente);
+//    Agenda paraEntidade(AgendaModel model);
+//
+//    AgendaModel paraModelo(Agenda entidade);
+//
+//    void atualizarModelo(Agenda agenda, @MappingTarget AgendaModel existente);
 }

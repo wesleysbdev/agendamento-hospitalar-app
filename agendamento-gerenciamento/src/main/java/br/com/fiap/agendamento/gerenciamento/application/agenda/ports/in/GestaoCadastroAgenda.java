@@ -4,5 +4,5 @@ import br.com.fiap.agendamento.gerenciamento.application.agenda.dto.AgendaCadast
 import br.com.fiap.agendamento.gerenciamento.domain.agenda.entity.Agenda;
 
 public interface GestaoCadastroAgenda {
-    Agenda cadastrar(AgendaCadastroDTO agendaCadastroDTO);
+//    Agenda cadastrar(AgendaCadastroDTO agendaCadastroDTO);
 }
