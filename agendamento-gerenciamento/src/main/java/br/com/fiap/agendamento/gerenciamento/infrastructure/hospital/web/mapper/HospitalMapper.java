@@ -1,7 +1,7 @@
 package br.com.fiap.agendamento.gerenciamento.infrastructure.hospital.web.mapper;
 
-import br.com.fiap.agendamento.gerenciamento.application.hospital.dto.cadastro.HospitalCadastroDTO;
-import br.com.fiap.agendamento.gerenciamento.application.hospital.dto.consulta.HospitalDTO;
+import br.com.fiap.agendamento.gerenciamento.application.hospital.dto.HospitalCadastroDTO;
+import br.com.fiap.agendamento.gerenciamento.application.hospital.dto.HospitalDTO;
 import br.com.fiap.agendamento.gerenciamento.domain.hospital.entity.Hospital;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.hospital.web.dto.HospitalRequest;
@@ -14,29 +14,37 @@ import java.time.Duration;
 @Mapper(componentModel = "spring")
 public interface HospitalMapper {
 
-//    @Mapping(
-//            target = "tempoLimiteCancelamento",
-//            source = "tempoLimiteCancelamentoMinutos"
-//    )
-//    @Mapping(
-//            target = "tempoToleranciaPosConsulta",
-//            source = "tempoToleranciaPosConsultaMinutos"
-//    )
-//    @Mapping(
-//            target = "tempoMinimoConsulta",
-//            source = "tempoMinimoConsultaMinutos"
-//    )
-//    HospitalCadastroDTO paraDTO(HospitalRequest request);
-//
-//    HospitalResponse paraResponse(Hospital hospital);
-//
-//    HospitalResponse paraResponse(HospitalDTO hospital);
-//
-//    default Duration map(Integer minutos) {
-//        return minutos == null
-//                ? null
-//                : Duration.ofMinutes(minutos);
-//    }
+    default Telefone paraTelefone(String valor) {
+        return valor == null ? null : new Telefone(valor);
+    }
+
+    default String paraString(Telefone telefone) {
+        return telefone == null ? null : telefone.valor();
+    }
+
+    @Mapping(
+            target = "tempoLimiteCancelamento",
+            source = "tempoLimiteCancelamentoMinutos"
+    )
+    @Mapping(
+            target = "tempoToleranciaPosConsulta",
+            source = "tempoToleranciaPosConsultaMinutos"
+    )
+    @Mapping(
+            target = "tempoMinimoConsulta",
+            source = "tempoMinimoConsultaMinutos"
+    )
+    HospitalCadastroDTO paraDTO(HospitalRequest request);
+
+    HospitalResponse paraResponse(Hospital hospital);
+
+    HospitalResponse paraResponse(HospitalDTO hospital);
+
+    default Duration map(Integer minutos) {
+        return minutos == null
+                ? null
+                : Duration.ofMinutes(minutos);
+    }
 }
 
 

@@ -7,6 +7,6 @@ import java.util.UUID;
 public record AgendaCadastroDTO(
         UUID medicoUuid,
         UUID hospitalUuid,
-        List<LocalTime> horarios
+        List<HorarioAgendaCadastroDTO> horarios
 ) {
 }

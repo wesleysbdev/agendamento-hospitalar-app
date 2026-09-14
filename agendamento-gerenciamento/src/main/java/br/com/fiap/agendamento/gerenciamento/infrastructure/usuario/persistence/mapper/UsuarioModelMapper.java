@@ -6,6 +6,7 @@ import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Email;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.persistence.model.*;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
 import java.util.List;
@@ -73,5 +74,7 @@ public interface UsuarioModelMapper {
 
     PacienteModel paraModelo(Paciente entidade);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "uuid", ignore = true)
     void atualizarModelo(Usuario usuario, @MappingTarget UsuarioModel existente);
 }

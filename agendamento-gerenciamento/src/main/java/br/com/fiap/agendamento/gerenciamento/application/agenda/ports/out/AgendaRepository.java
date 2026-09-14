@@ -7,13 +7,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface AgendaRepository {
-//    List<Agenda> listar();
-//
-//    Optional<Agenda> buscarPorUuid(UUID uuid);
-//
-//    List<Agenda> buscarPorMedico(UUID medicoUuid);
-//
-//    List<Agenda> buscarPorHospital(UUID hospitalUuid);
-//
-//    Agenda salvar(Agenda agenda);
+    List<Agenda> listar();
+
+    Optional<Agenda> buscarPorUuid(UUID uuid);
+
+    List<Agenda> buscarPorMedico(UUID medicoUuid);
+
+    List<Agenda> buscarPorHospital(UUID hospitalUuid);
+
+    Agenda salvar(Agenda agenda);
 }

@@ -18,10 +18,7 @@ public interface HospitalModelMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "uuid", ignore = true)
-    void atualizarModelo(
-            Hospital hospital,
-            @MappingTarget HospitalModel existente
-    );
+    void atualizarModelo(Hospital hospital, @MappingTarget HospitalModel existente);
 
     default Telefone paraTelefone(String valor) {
         return valor == null ? null : new Telefone(valor);

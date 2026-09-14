@@ -1,4 +1,4 @@
-package br.com.fiap.agendamento.gerenciamento.application.hospital.dto.cadastro;
+package br.com.fiap.agendamento.gerenciamento.application.hospital.dto;
 
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
 
@@ -9,7 +9,7 @@ import java.time.LocalTime;
 public record HospitalCadastroDTO(
         String nome,
         String endereco,
-        Telefone telefone,
+        String telefone,
         DayOfWeek diaSemanaInicio,
         DayOfWeek diaSemanaFim,
         LocalTime horaInicio,

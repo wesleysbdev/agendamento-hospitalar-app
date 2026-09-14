@@ -57,12 +57,6 @@ public class Hospital {
         this.tempoMinimoConsulta = tempoMinimoConsulta;
     }
 
-    private static void validarIdentificador(UUID uuid) {
-        if (uuid == null || uuid.toString().isBlank()) {
-            throw new HospitalDadosInvalidosException("UUID é obrigatório.");
-        }
-    }
-
     public void alterarDados(
             String nome,
             String endereco,
@@ -87,6 +81,12 @@ public class Hospital {
         this.tempoLimiteCancelamento = tempoLimiteCancelamento;
         this.tempoToleranciaPosConsulta = tempoToleranciaPosConsulta;
         this.tempoMinimoConsulta = tempoMinimoConsulta;
+    }
+
+    private static void validarIdentificador(UUID uuid) {
+        if (uuid == null || uuid.toString().isBlank()) {
+            throw new HospitalDadosInvalidosException("UUID é obrigatório.");
+        }
     }
 
     private void validarDadosObrigatorios(String nome, String endereco, Telefone telefone, DayOfWeek diaSemanaInicio, DayOfWeek diaSemanaFim, LocalTime horaInicio, LocalTime horaFim, Duration tempoLimiteCancelamento, Duration tempoToleranciaPosConsulta, Duration tempoMinimoConsulta) {

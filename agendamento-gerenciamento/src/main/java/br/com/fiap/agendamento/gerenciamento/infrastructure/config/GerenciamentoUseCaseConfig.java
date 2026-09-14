@@ -11,11 +11,9 @@ import br.com.fiap.agendamento.gerenciamento.application.consulta.ports.out.Cons
 import br.com.fiap.agendamento.gerenciamento.application.consulta.usecases.CriarConsultaUseCase;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.in.GestaoCadastroHospital;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.in.GestaoConsultaHospital;
-import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.in.GestaoEditarHospital;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.out.HospitalRepository;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.usecases.CadastroHospitalUseCase;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.usecases.ConsultaHospitalUseCase;
-import br.com.fiap.agendamento.gerenciamento.application.hospital.usecases.EditarHospitalUseCase;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.in.GestaoAutenticacao;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.in.GestaoCadastroUsuario;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.in.GestaoConsultaUsuario;
@@ -79,8 +77,4 @@ public class GerenciamentoUseCaseConfig {
         return new ConsultaHospitalUseCase(repository);
     }
 
-    @Bean
-    public GestaoEditarHospital gestaoEditarHospital(HospitalRepository repository) {
-        return new EditarHospitalUseCase(repository);
-    }
 }
