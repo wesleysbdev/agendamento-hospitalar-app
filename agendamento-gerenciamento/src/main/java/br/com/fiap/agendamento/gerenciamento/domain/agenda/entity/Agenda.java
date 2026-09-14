@@ -16,7 +16,7 @@ public class Agenda {
     private final UUID uuid;
     private final Medico medico;
     private final Hospital hospital;
-    private final List<HorarioAgenda> horarios;
+    private List<HorarioAgenda> horarios;
 
     public Agenda(UUID uuid, Medico medico, Hospital hospital, List<HorarioAgenda> horarios) {
         validarDadosObrigatorios(uuid, medico, hospital, horarios);
@@ -119,6 +119,15 @@ public class Agenda {
         validarHorarios(novosHorarios);
 
         horarios.add(horario);
+    }
+
+    public void adicionarHorarios(List<HorarioAgenda> horarios) {
+        List<HorarioAgenda> novosHorarios = new ArrayList<>(this.horarios);
+        novosHorarios.addAll(horarios);
+
+        validarHorarios(novosHorarios);
+
+        this.horarios = novosHorarios;
     }
 
     public void removerHorario(HorarioAgenda horario) {

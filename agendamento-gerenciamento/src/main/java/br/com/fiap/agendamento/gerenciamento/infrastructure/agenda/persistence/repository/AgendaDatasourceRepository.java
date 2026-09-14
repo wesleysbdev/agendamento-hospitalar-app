@@ -13,4 +13,6 @@ public interface AgendaDatasourceRepository extends JpaRepository<AgendaModel, L
     List<AgendaModel> findByMedicoUuid(UUID medicoUuid);
 
     List<AgendaModel> findByHospitalUuid(UUID hospitalUuid);
+
+    Optional<AgendaModel> findByMedicoUuidAndHospitalUuid(UUID medicoUuid, UUID hospitalUuid);
 }

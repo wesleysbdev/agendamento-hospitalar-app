@@ -9,6 +9,7 @@ import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.out.Hosp
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.out.UsuarioRepository;
 import br.com.fiap.agendamento.gerenciamento.domain.agenda.entity.Agenda;
 import br.com.fiap.agendamento.gerenciamento.domain.agenda.entity.HorarioAgenda;
+import br.com.fiap.agendamento.gerenciamento.domain.agenda.exception.AgendaDadosInvalidosException;
 import br.com.fiap.agendamento.gerenciamento.domain.agenda.exception.AgendaNaoEncontradaException;
 import br.com.fiap.agendamento.gerenciamento.domain.agenda.exception.HorarioAgendaNaoEncontradoException;
 import br.com.fiap.agendamento.gerenciamento.domain.hospital.entity.Hospital;
@@ -37,13 +38,19 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
 
     @Override
     public Agenda cadastrar(AgendaCadastroDTO agendaCadastro, UsuarioAutenticado usuarioAutenticado) {
-        Medico medico = usuarioRepository.buscarPorUuid(agendaCadastro.medicoUuid())
-                .filter(usuario -> usuario instanceof Medico)
-                .map(usuario -> (Medico) usuario)
-                .orElseThrow(() -> new UsuarioNaoEncontradoException("Médico não encontrado"));
+        Medico medico = buscarMedico(usuarioAutenticado.uuid());
 
-        Hospital hospital = hospitalRepository.buscarPorUuid(agendaCadastro.hospitalUuid())
-                .orElseThrow(() -> new HospitalNaoEncontradoException("Hospital não encontrado"));
+        if (!medico.isAtivo() || medico.isExcluido()) {
+            throw new AgendaDadosInvalidosException("O médico precisa estar ativo para manipular agendas.");
+        }
+
+        Hospital hospital = buscarHospital(agendaCadastro.hospitalUuid());
+
+        if (!hospital.isAtivo() || hospital.isExcluido()) {
+            throw new AgendaDadosInvalidosException("O hospital precisa estar ativo para receber agendas.");
+        }
+
+        validarAgendaExistente(medico.getUuid(), hospital.getUuid());
 
         Agenda agenda = new Agenda(
                 UUID.randomUUID(),
@@ -58,9 +65,8 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
     @Override
     public Agenda adicionarHorarios(UUID agendaUuid, List<HorarioAgendaCadastroDTO> horarios, UsuarioAutenticado usuarioAutenticado) {
         Agenda agenda = buscarAgendaPorUuid(agendaUuid);
-        for (HorarioAgendaCadastroDTO horario : horarios) {
-            agenda.adicionarHorario(criarHorario(horario));
-        }
+        List<HorarioAgenda> novosHorarios = horarios.stream().map(this::criarHorario).toList();
+        agenda.adicionarHorarios(novosHorarios);
         return agendaRepository.salvar(agenda);
     }
 
@@ -70,6 +76,27 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
         HorarioAgenda horarioAgenda = buscarHorarioNaAgenda(agenda.getHorarios(), horarioUuid);
         agenda.removerHorario(horarioAgenda);
         return agendaRepository.salvar(agenda);
+    }
+
+    private Medico buscarMedico(UUID uuid) {
+        return usuarioRepository.buscarPorUuid(uuid)
+                .filter(usuario -> usuario instanceof Medico)
+                .map(usuario -> (Medico) usuario)
+                .orElseThrow(() ->
+                        new UsuarioNaoEncontradoException("Médico não encontrado."));
+    }
+
+    private Hospital buscarHospital(UUID uuid) {
+        return hospitalRepository.buscarPorUuid(uuid)
+                .orElseThrow(() ->
+                        new HospitalNaoEncontradoException("Hospital não encontrado."));
+    }
+
+    private void validarAgendaExistente(UUID medicoUuid, UUID hospitalUuid) {
+        agendaRepository.buscarPorMedicoEHospital(medicoUuid, hospitalUuid)
+                .ifPresent(agenda -> {
+                    throw new AgendaDadosInvalidosException("O médico já possui uma agenda neste hospital.");
+                });
     }
 
     private Agenda buscarAgendaPorUuid(UUID uuid) {

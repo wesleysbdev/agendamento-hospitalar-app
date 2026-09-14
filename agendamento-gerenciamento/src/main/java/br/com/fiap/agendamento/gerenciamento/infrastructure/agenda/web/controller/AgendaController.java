@@ -1,22 +1,12 @@
 package br.com.fiap.agendamento.gerenciamento.infrastructure.agenda.web.controller;
 
-import br.com.fiap.agendamento.gerenciamento.application.agenda.dto.consulta.AgendaDTO;
 import br.com.fiap.agendamento.gerenciamento.application.agenda.ports.in.GestaoCadastroAgenda;
 import br.com.fiap.agendamento.gerenciamento.application.agenda.ports.in.GestaoConsultaAgenda;
-import br.com.fiap.agendamento.gerenciamento.domain.agenda.entity.Agenda;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.config.security.SecurityContextProvider;
-import br.com.fiap.agendamento.gerenciamento.infrastructure.agenda.web.dto.AgendaRequest;
-import br.com.fiap.agendamento.gerenciamento.infrastructure.agenda.web.dto.AgendaResponse;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.agenda.web.mapper.AgendaRequestMapper;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.agenda.web.mapper.AgendaResponseMapper;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("agendas")

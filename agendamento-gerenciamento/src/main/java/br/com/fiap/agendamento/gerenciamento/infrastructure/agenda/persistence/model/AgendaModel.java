@@ -1,7 +1,7 @@
 package br.com.fiap.agendamento.gerenciamento.infrastructure.agenda.persistence.model;
 
 import br.com.fiap.agendamento.gerenciamento.infrastructure.hospital.persistence.model.HospitalModel;
-import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.persistence.model.UsuarioModel;
+import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.persistence.model.MedicoModel;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +28,7 @@ public class AgendaModel {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "medico_id", nullable = false, foreignKey = @ForeignKey(name = "fk_agenda_medico"))
-    private UsuarioModel medico;
+    private MedicoModel medico;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "hospital_id", nullable = false, foreignKey = @ForeignKey(name = "fk_agenda_hospital"))

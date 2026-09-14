@@ -12,7 +12,7 @@ public record AgendaRequest(
         UUID medicoUuid,
         @NotNull(message = "O campo hospitalUuid é obrigatório.")
         UUID hospitalUuid,
-        @NotNull(message = "O campo horarios é obrigatório.")
-        List<LocalTime> horarios
+        @NotNull(message = "O campo horarios são obrigatórios.")
+        List<HorarioAgendaRequest> horarios
 ) {
 }

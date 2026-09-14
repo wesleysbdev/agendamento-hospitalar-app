@@ -2,7 +2,7 @@ package br.com.fiap.agendamento.gerenciamento.infrastructure.consulta.persistenc
 
 import br.com.fiap.agendamento.gerenciamento.domain.consulta.enums.StatusConsulta;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.agenda.persistence.model.AgendaModel;
-import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.persistence.model.UsuarioModel;
+import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.persistence.model.PacienteModel;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +29,7 @@ public class ConsultaModel {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "paciente_id", nullable = false, foreignKey = @ForeignKey(name = "fk_consulta_paciente"))
-    private UsuarioModel paciente;
+    private PacienteModel paciente;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "agenda_id", nullable = false, foreignKey = @ForeignKey(name = "fk_consulta_agenda"))

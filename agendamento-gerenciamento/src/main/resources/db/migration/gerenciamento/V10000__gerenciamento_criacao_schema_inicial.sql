@@ -103,7 +103,8 @@ CREATE TABLE public.agenda
     CONSTRAINT fk_agenda_medico FOREIGN KEY (medico_id)
     REFERENCES public.usuario (id) MATCH SIMPLE
                            ON UPDATE NO ACTION
-                           ON DELETE NO ACTION
+                           ON DELETE NO ACTION,
+    CONSTRAINT uk_agenda_medico_hospital UNIQUE (medico_id, hospital_id)
     );
 
 -- Table: public.agenda_horario
