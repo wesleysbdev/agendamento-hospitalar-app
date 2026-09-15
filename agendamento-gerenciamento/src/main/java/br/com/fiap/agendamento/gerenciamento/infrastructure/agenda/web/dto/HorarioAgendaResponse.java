@@ -5,7 +5,7 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 public record HorarioAgendaResponse(
-        UUID uuid,
+        UUID id,
         DayOfWeek diaSemana,
         LocalTime horario
 ) {

@@ -27,33 +27,38 @@ public class AgendaRepositoryAdapter implements AgendaRepository {
 
     @Override
     public List<Agenda> listar() {
-        return repository.findAll().stream().map(mapper::paraEntidade).toList();
+        return repository.findAllWithRelacionamentos()
+                .stream()
+                .map(mapper::paraEntidade)
+                .toList();
     }
 
     @Override
     public Optional<Agenda> buscarPorUuid(UUID uuid) {
-        return repository.findByUuid(uuid).map(mapper::paraEntidade);
+        return repository.findWithRelacionamentosById(uuid).map(mapper::paraEntidade);
     }
 
     @Override
     public List<Agenda> buscarPorMedico(UUID medicoUuid) {
-        return repository.findByMedicoUuid(medicoUuid).stream().map(mapper::paraEntidade).toList();
+        return repository.findByMedicoId(medicoUuid).stream().map(mapper::paraEntidade).toList();
     }
 
     @Override
     public List<Agenda> buscarPorHospital(UUID hospitalUuid) {
-        return repository.findByHospitalUuid(hospitalUuid).stream().map(mapper::paraEntidade).toList();
+        return repository.findByHospitalId(hospitalUuid).stream().map(mapper::paraEntidade).toList();
     }
 
     @Override
     public Optional<Agenda> buscarPorMedicoEHospital(UUID medicoUuid, UUID hospitalUuid) {
-        Optional<AgendaModel> model = repository.findByMedicoUuidAndHospitalUuid(medicoUuid, hospitalUuid);
+        Optional<AgendaModel> model = repository.findByMedicoIdAndHospitalId(medicoUuid, hospitalUuid);
         return mapper.paraEntidade(model);
     }
 
     @Override
     public Agenda salvar(Agenda agenda) {
-        AgendaModel model = repository.findByUuid(agenda.getUuid())
+
+        AgendaModel model = repository
+                .findWithRelacionamentosById(agenda.getId())
                 .map(existente -> {
                     mapper.atualizarModelo(agenda, existente);
                     configurarRelacionamentos(agenda, existente);
@@ -67,12 +72,17 @@ public class AgendaRepositoryAdapter implements AgendaRepository {
 
         AgendaModel salvo = repository.save(model);
 
-        return mapper.paraEntidade(salvo);
+        return repository
+                .findWithRelacionamentosById(salvo.getId())
+                .map(mapper::paraEntidade)
+                .orElseThrow(() ->
+                        new IllegalStateException("Agenda salva não encontrada.")
+                );
     }
 
     private void configurarRelacionamentos(Agenda agenda, AgendaModel model) {
         MedicoModel medico = usuarioRepository
-                .findByUuid(agenda.getMedico().getUuid())
+                .findById(agenda.getMedico().getId())
                 .filter(usuario -> usuario instanceof MedicoModel)
                 .map(usuario -> (MedicoModel) usuario)
                 .orElseThrow(() ->
@@ -80,7 +90,7 @@ public class AgendaRepositoryAdapter implements AgendaRepository {
                 );
 
         HospitalModel hospital = hospitalRepository
-                .findByUuid(agenda.getHospital().getUuid())
+                .findById(agenda.getHospital().getId())
                 .orElseThrow(() ->
                         new IllegalStateException("Hospital da agenda não encontrado.")
                 );

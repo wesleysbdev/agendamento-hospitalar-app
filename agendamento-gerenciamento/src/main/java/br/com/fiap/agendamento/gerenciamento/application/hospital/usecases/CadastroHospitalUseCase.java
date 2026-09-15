@@ -79,7 +79,7 @@ public class CadastroHospitalUseCase implements GestaoCadastroHospital {
     }
 
     private Hospital buscarHospitalPorUuid(UUID uuid) {
-        return hospitalRepository.buscarPorUuid(uuid)
+        return hospitalRepository.buscarPorId(uuid)
                 .orElseThrow(() -> new HospitalNaoEncontradoException("Hospital não encontrado."));
     }
 }

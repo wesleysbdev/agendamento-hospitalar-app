@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public class Hospital {
 
-    private final UUID uuid;
+    private final UUID id;
     private String nome;
     private String endereco;
     private Telefone telefone;
@@ -25,7 +25,7 @@ public class Hospital {
     private Duration tempoMinimoConsulta;
 
     public Hospital(
-            UUID uuid,
+            UUID id,
             String nome,
             String endereco,
             Telefone telefone,
@@ -39,10 +39,10 @@ public class Hospital {
             Duration tempoToleranciaPosConsulta,
             Duration tempoMinimoConsulta
     ) {
-        validarIdentificador(uuid);
+        validarIdentificador(id);
         validarDadosObrigatorios(nome, endereco, telefone, diaSemanaInicio, diaSemanaFim, horaInicio, horaFim, tempoLimiteCancelamento, tempoToleranciaPosConsulta, tempoMinimoConsulta);
         validarDadosCadastrais(diaSemanaInicio, diaSemanaFim, horaInicio, horaFim);
-        this.uuid = uuid;
+        this.id = id;
         this.nome = nome;
         this.endereco = endereco;
         this.telefone = telefone;
@@ -83,8 +83,8 @@ public class Hospital {
         this.tempoMinimoConsulta = tempoMinimoConsulta;
     }
 
-    private static void validarIdentificador(UUID uuid) {
-        if (uuid == null || uuid.toString().isBlank()) {
+    private static void validarIdentificador(UUID id) {
+        if (id == null || id.toString().isBlank()) {
             throw new HospitalDadosInvalidosException("UUID é obrigatório.");
         }
     }
@@ -173,8 +173,8 @@ public class Hospital {
         return !horario.isBefore(horaInicio) && !horario.isAfter(horaFim);
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getId() {
+        return id;
     }
 
     public String getNome() {

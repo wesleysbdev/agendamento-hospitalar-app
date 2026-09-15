@@ -42,7 +42,6 @@ public interface HospitalModelMapper {
     HospitalModel paraModelo(Hospital entidade);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "uuid", ignore = true)
     void atualizarModelo(Hospital hospital, @MappingTarget HospitalModel existente);
 
     default Duration paraDuration(Integer minutos) {

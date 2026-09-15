@@ -9,18 +9,14 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "hospital", uniqueConstraints = {@UniqueConstraint(name = "uk_hospital_uuid", columnNames = "uuid")})
+@Table(name = "hospital", uniqueConstraints = {@UniqueConstraint(name = "uk_hospital_id", columnNames = "id")})
 @Getter
 @Setter
 public class HospitalModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hospital_seq")
-    @SequenceGenerator(name = "hospital_seq", sequenceName = "hospital_id_seq", allocationSize = 1)
-    private Long id;
-
-    @Column(nullable = false, unique = true, length = 36)
-    private UUID uuid;
+    @Column(nullable = false, unique = true, updatable = false, length = 36)
+    private UUID id;
 
     @Column(nullable = false, length = 200)
     private String nome;

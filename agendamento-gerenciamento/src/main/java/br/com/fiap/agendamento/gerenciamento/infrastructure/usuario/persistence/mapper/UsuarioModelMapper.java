@@ -46,6 +46,5 @@ public interface UsuarioModelMapper {
     PacienteModel paraModelo(Paciente entidade);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "uuid", ignore = true)
     void atualizarModelo(Usuario usuario, @MappingTarget UsuarioModel existente);
 }

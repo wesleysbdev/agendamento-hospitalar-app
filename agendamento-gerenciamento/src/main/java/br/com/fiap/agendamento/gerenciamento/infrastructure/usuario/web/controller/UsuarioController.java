@@ -83,9 +83,9 @@ public class UsuarioController {
 
     @GetMapping("/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public UsuarioResponse consultarPorUuid(@PathVariable UUID uuid) {
+    public UsuarioResponse consultarPorId(@PathVariable UUID uuid) {
         UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
-        UsuarioDTO usuario = consultaUsuario.buscarUsuarioPorUuid(uuid, usuarioAutenticado);
+        UsuarioDTO usuario = consultaUsuario.buscarUsuarioPorId(uuid, usuarioAutenticado);
         return mapper.paraResponse(usuario);
     }
 

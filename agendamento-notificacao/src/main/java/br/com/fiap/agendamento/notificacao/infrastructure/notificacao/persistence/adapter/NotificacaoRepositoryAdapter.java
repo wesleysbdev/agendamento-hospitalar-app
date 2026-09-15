@@ -26,12 +26,12 @@ public class NotificacaoRepositoryAdapter implements NotificacaoRepository {
 
     @Override
     public Optional<Notificacao> buscarPorUuid(UUID uuid) {
-        return repository.findByUuid(uuid).map(mapper::paraEntidade);
+        return repository.findById(uuid).map(mapper::paraEntidade);
     }
 
     @Override
     public Notificacao salvar(Notificacao notificacao) {
-        NotificacaoModel model = repository.findByUuid(notificacao.getUuid())
+        NotificacaoModel model = repository.findById(notificacao.getUuid())
                 .map(existente -> {
                     mapper.atualizarModelo(notificacao, existente);
                     return existente;

@@ -100,7 +100,7 @@ public class EditarUsuarioUseCase implements GestaoEditarUsuario {
     }
 
     private Usuario buscarUsuarioPorUuid(UUID uuid) {
-        return repository.buscarPorUuid(uuid).orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
+        return repository.buscarPorId(uuid).orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
     }
 
     private Medico buscarMedicoPorUuid(UUID uuid) {

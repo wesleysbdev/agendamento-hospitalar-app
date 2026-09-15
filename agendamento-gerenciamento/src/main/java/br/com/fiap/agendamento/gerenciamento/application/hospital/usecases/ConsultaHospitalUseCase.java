@@ -25,14 +25,14 @@ public class ConsultaHospitalUseCase implements GestaoConsultaHospital {
     }
 
     @Override
-    public HospitalDTO buscarHospitalPorUuid(UUID uuid, UsuarioAutenticado usuarioAutenticado) {
+    public HospitalDTO buscarHospitalPorId(UUID uuid, UsuarioAutenticado usuarioAutenticado) {
         Hospital hospital = buscarHospitalPorUuid(uuid);
         return converterParaDTO(hospital);
     }
 
     private HospitalDTO converterParaDTO(Hospital hospital) {
         return new HospitalDTO(
-                hospital.getUuid(),
+                hospital.getId(),
                 hospital.getNome(),
                 hospital.getEndereco(),
                 hospital.getTelefone(),
@@ -48,7 +48,7 @@ public class ConsultaHospitalUseCase implements GestaoConsultaHospital {
     }
 
     private Hospital buscarHospitalPorUuid(UUID uuid) {
-        return hospitalRepository.buscarPorUuid(uuid)
+        return hospitalRepository.buscarPorId(uuid)
                 .orElseThrow(() -> new HospitalNaoEncontradoException("Hospital não encontrado."));
     }
 }

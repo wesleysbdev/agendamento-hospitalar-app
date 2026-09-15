@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface UsuarioDatasourceRepository extends JpaRepository<UsuarioModel, Long> {
-    Optional<UsuarioModel> findByUuid(UUID uuid);
-
+public interface UsuarioDatasourceRepository extends JpaRepository<UsuarioModel, UUID> {
     @Query(value = "SELECT * FROM usuario WHERE tipo = :tipoUsuario", nativeQuery = true)
     List<UsuarioModel> findByTipo(String tipoUsuario);
 

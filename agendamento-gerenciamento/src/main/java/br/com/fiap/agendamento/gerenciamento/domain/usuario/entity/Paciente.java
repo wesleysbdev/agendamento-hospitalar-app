@@ -10,8 +10,8 @@ public final class Paciente extends Usuario {
 
     private Telefone telefone;
 
-    public Paciente(UUID uuid, String nome, Email email, Telefone telefone, String senha, boolean ativo, boolean excluido) {
-        super(uuid, nome, email, senha, ativo, excluido);
+    public Paciente(UUID id, String nome, Email email, Telefone telefone, String senha, boolean ativo, boolean excluido) {
+        super(id, nome, email, senha, ativo, excluido);
         this.telefone = telefone;
     }
 

@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 public record AgendaResponse(
-        UUID uuid,
-        UUID medicoUuid,
+        UUID id,
+        UUID medicoId,
         String medicoNome,
-        UUID hospitalUuid,
+        UUID hospitalId,
         String hospitalNome,
         List<HorarioAgendaResponse> horarios
 ) {

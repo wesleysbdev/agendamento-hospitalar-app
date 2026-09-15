@@ -13,18 +13,14 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "agenda", uniqueConstraints = {@UniqueConstraint(name = "uk_agenda_uuid", columnNames = "uuid")})
+@Table(name = "agenda", uniqueConstraints = {@UniqueConstraint(name = "uk_agenda_id", columnNames = "id")})
 @Getter
 @Setter
 public class AgendaModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "agenda_seq")
-    @SequenceGenerator(name = "agenda_seq", sequenceName = "agenda_id_seq", allocationSize = 1)
-    private Long id;
-
-    @Column(nullable = false, unique = true, length = 36)
-    private UUID uuid;
+    @Column(nullable = false, unique = true, updatable = false, length = 36)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "medico_id", nullable = false, foreignKey = @ForeignKey(name = "fk_agenda_medico"))

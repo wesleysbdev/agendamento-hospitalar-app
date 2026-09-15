@@ -44,13 +44,13 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
             throw new AgendaDadosInvalidosException("O médico precisa estar ativo para manipular agendas.");
         }
 
-        Hospital hospital = buscarHospital(agendaCadastro.hospitalUuid());
+        Hospital hospital = buscarHospital(agendaCadastro.hospitalId());
 
         if (!hospital.isAtivo() || hospital.isExcluido()) {
             throw new AgendaDadosInvalidosException("O hospital precisa estar ativo para receber agendas.");
         }
 
-        validarAgendaExistente(medico.getUuid(), hospital.getUuid());
+        validarAgendaExistente(medico.getId(), hospital.getId());
 
         Agenda agenda = new Agenda(
                 UUID.randomUUID(),
@@ -79,7 +79,7 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
     }
 
     private Medico buscarMedico(UUID uuid) {
-        return usuarioRepository.buscarPorUuid(uuid)
+        return usuarioRepository.buscarPorId(uuid)
                 .filter(usuario -> usuario instanceof Medico)
                 .map(usuario -> (Medico) usuario)
                 .orElseThrow(() ->
@@ -87,7 +87,7 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
     }
 
     private Hospital buscarHospital(UUID uuid) {
-        return hospitalRepository.buscarPorUuid(uuid)
+        return hospitalRepository.buscarPorId(uuid)
                 .orElseThrow(() ->
                         new HospitalNaoEncontradoException("Hospital não encontrado."));
     }
@@ -118,7 +118,7 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
 
     private HorarioAgenda buscarHorarioNaAgenda(List<HorarioAgenda> horariosDaAgenda, UUID uuidBuscado) {
         return horariosDaAgenda.stream()
-                .filter(obj -> uuidBuscado.equals(obj.getUuid()))
+                .filter(obj -> uuidBuscado.equals(obj.getId()))
                 .findFirst().orElseThrow(() -> new HorarioAgendaNaoEncontradoException());
     }
 }

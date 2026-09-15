@@ -6,8 +6,8 @@ import java.util.UUID;
 
 public record ConsultaRequest(
         @NotNull(message = "A identificação da agenda é obrigatório.")
-        UUID agendaUuid,
+        UUID agendaId,
         @NotNull(message = "A identificação do paciente é obrigatório.")
-        UUID pacienteUuid
+        UUID pacienteId
 ) {
 }

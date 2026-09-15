@@ -3,9 +3,7 @@ package br.com.fiap.agendamento.gerenciamento.infrastructure.hospital.persistenc
 import br.com.fiap.agendamento.gerenciamento.infrastructure.hospital.persistence.model.HospitalModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
 import java.util.UUID;
 
-public interface HospitalDatasourceRepository extends JpaRepository<HospitalModel, Long> {
-    Optional<HospitalModel> findByUuid(UUID uuid);
+public interface HospitalDatasourceRepository extends JpaRepository<HospitalModel, UUID> {
 }

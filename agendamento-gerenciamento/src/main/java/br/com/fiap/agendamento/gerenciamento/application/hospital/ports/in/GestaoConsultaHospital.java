@@ -9,5 +9,5 @@ import java.util.UUID;
 public interface GestaoConsultaHospital {
     List<HospitalDTO> listarHospitais(UsuarioAutenticado usuarioAutenticado);
 
-    HospitalDTO buscarHospitalPorUuid(UUID uuid, UsuarioAutenticado usuarioAutenticado);
+    HospitalDTO buscarHospitalPorId(UUID uuid, UsuarioAutenticado usuarioAutenticado);
 }

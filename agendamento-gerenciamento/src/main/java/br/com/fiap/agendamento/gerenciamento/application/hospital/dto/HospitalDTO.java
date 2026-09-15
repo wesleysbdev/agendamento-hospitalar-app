@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 public record HospitalDTO (
-    UUID uuid,
+    UUID id,
     String nome,
     String endereco,
     Telefone telefone,

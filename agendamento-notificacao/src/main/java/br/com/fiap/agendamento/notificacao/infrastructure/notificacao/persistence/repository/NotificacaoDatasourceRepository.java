@@ -4,11 +4,8 @@ import br.com.fiap.agendamento.notificacao.infrastructure.notificacao.persistenc
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-public interface NotificacaoDatasourceRepository extends JpaRepository<NotificacaoModel, Long> {
-    Optional<NotificacaoModel> findByUuid(UUID uuid);
-
+public interface NotificacaoDatasourceRepository extends JpaRepository<NotificacaoModel, UUID> {
     List<NotificacaoModel> findByDestinatario(String destinatario);
 }

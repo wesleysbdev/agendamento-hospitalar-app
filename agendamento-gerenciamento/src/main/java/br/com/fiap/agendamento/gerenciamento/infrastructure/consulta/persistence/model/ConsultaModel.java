@@ -14,18 +14,14 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "consulta", uniqueConstraints = {@UniqueConstraint(name = "uk_consulta_uuid", columnNames = "uuid")})
+@Table(name = "consulta", uniqueConstraints = {@UniqueConstraint(name = "uk_consulta_id", columnNames = "id")})
 @Getter
 @Setter
 public class ConsultaModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "consulta_seq")
-    @SequenceGenerator(name = "consulta_seq", sequenceName = "consulta_id_seq", allocationSize = 1)
-    private Long id;
-
-    @Column(nullable = false, unique = true, updatable = false)
-    private UUID uuid;
+    @Column(nullable = false, unique = true, updatable = false, length = 36)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "paciente_id", nullable = false, foreignKey = @ForeignKey(name = "fk_consulta_paciente"))

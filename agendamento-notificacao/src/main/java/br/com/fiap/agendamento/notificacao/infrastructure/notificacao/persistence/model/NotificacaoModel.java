@@ -10,18 +10,14 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "notificacao", uniqueConstraints = {@UniqueConstraint(name = "uk_notificacao_uuid", columnNames = "uuid")})
+@Table(name = "notificacao", uniqueConstraints = {@UniqueConstraint(name = "uk_notificacao_id", columnNames = "id")})
 @Getter
 @Setter
 public class NotificacaoModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "notificacao_seq")
-    @SequenceGenerator(name = "notificacao_seq", sequenceName = "notificacao_id_seq", allocationSize = 1)
-    private Long id;
-
-    @Column(nullable = false, unique = true, length = 36)
-    private UUID uuid;
+    @Column(nullable = false, unique = true, updatable = false, length = 36)
+    private UUID id;
 
     @Column(nullable = false, length = 200)
     private String destinatario;
