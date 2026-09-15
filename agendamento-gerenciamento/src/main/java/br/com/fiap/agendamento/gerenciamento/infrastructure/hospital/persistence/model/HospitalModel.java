@@ -9,7 +9,7 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "hospital")
+@Table(name = "hospital", uniqueConstraints = {@UniqueConstraint(name = "uk_hospital_uuid", columnNames = "uuid")})
 @Getter
 @Setter
 public class HospitalModel {
@@ -50,7 +50,7 @@ public class HospitalModel {
 
     @Column(nullable = false)
     private Integer tempoToleranciaPosConsultaMinutos;
-
+	
     @Column(nullable = false)
     private Integer tempoMinimoConsultaMinutos;
 

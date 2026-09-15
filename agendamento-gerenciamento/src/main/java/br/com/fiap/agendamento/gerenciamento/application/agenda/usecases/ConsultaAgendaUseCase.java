@@ -1,9 +1,12 @@
 package br.com.fiap.agendamento.gerenciamento.application.agenda.usecases;
 
-import br.com.fiap.agendamento.gerenciamento.application.agenda.dto.consulta.AgendaDTO;
+import br.com.fiap.agendamento.gerenciamento.application.agenda.dto.AgendaDTO;
+import br.com.fiap.agendamento.gerenciamento.application.agenda.dto.HorarioAgendaDTO;
 import br.com.fiap.agendamento.gerenciamento.application.agenda.ports.in.GestaoConsultaAgenda;
 import br.com.fiap.agendamento.gerenciamento.application.agenda.ports.out.AgendaRepository;
+import br.com.fiap.agendamento.gerenciamento.application.dto.UsuarioAutenticado;
 import br.com.fiap.agendamento.gerenciamento.domain.agenda.entity.Agenda;
+import br.com.fiap.agendamento.gerenciamento.domain.agenda.entity.HorarioAgenda;
 import br.com.fiap.agendamento.gerenciamento.domain.agenda.exception.AgendaNaoEncontradaException;
 
 import java.util.List;
@@ -18,64 +21,51 @@ public class ConsultaAgendaUseCase implements GestaoConsultaAgenda {
     }
 
     @Override
-    public List<AgendaDTO> listarAgendas() {
+    public List<AgendaDTO> listarAgendas(UsuarioAutenticado usuarioAutenticado) {
         List<Agenda> agendas = agendaRepository.listar();
         return agendas.stream().map(this::converterParaDTO).toList();
     }
 
     @Override
-    public AgendaDTO buscarAgendaPorUuid(UUID uuid) {
-        Agenda agenda = validarAgendaPorUuid(uuid);
+    public AgendaDTO buscarAgendaPorUuid(UUID uuid, UsuarioAutenticado usuarioAutenticado) {
+        Agenda agenda = buscarPorUuid(uuid);
         return converterParaDTO(agenda);
     }
 
     @Override
-    public List<AgendaDTO> buscarAgendasPorMedico(UUID medicoUuid) {
+    public List<AgendaDTO> buscarAgendasPorMedico(UUID medicoUuid, UsuarioAutenticado usuarioAutenticado) {
         List<Agenda> agendas = agendaRepository.buscarPorMedico(medicoUuid);
         return agendas.stream().map(this::converterParaDTO).toList();
     }
 
     @Override
-    public List<AgendaDTO> buscarAgendasPorHospital(UUID hospitalUuid) {
+    public List<AgendaDTO> buscarAgendasPorHospital(UUID hospitalUuid, UsuarioAutenticado usuarioAutenticado) {
         List<Agenda> agendas = agendaRepository.buscarPorHospital(hospitalUuid);
         return agendas.stream().map(this::converterParaDTO).toList();
     }
 
     private AgendaDTO converterParaDTO(Agenda agenda) {
-        return new AgendaDTO() {
-            @Override
-            public UUID uuid() {
-                return agenda.getUuid();
-            }
-
-            @Override
-            public UUID medicoUuid() {
-                return agenda.getMedico().getUuid();
-            }
-
-            @Override
-            public String medicoNome() {
-                return agenda.getMedico().getNome();
-            }
-
-            @Override
-            public UUID hospitalUuid() {
-                return agenda.getHospital().getUuid();
-            }
-
-            @Override
-            public String hospitalNome() {
-                return agenda.getHospital().getNome();
-            }
-
-            @Override
-            public List<java.time.LocalTime> horarios() {
-                return agenda.getHorarios();
-            }
-        };
+        return new AgendaDTO(
+                agenda.getUuid(),
+                agenda.getMedico().getUuid(),
+                agenda.getMedico().getNome(),
+                agenda.getHospital().getUuid(),
+                agenda.getHospital().getNome(),
+                converterHorarioAgendaParaDTO(agenda.getHorarios())
+        );
     }
 
-    private Agenda validarAgendaPorUuid(UUID uuid) {
+    private List<HorarioAgendaDTO> converterHorarioAgendaParaDTO(List<HorarioAgenda> horarios) {
+        return horarios.stream().map(
+                horarioAgenda -> new HorarioAgendaDTO(
+                        horarioAgenda.getUuid(),
+                        horarioAgenda.getDiaSemana(),
+                        horarioAgenda.getHorario()
+                )
+        ).toList();
+    }
+
+    private Agenda buscarPorUuid(UUID uuid) {
         return agendaRepository.buscarPorUuid(uuid)
                 .orElseThrow(() -> new AgendaNaoEncontradaException("Agenda não encontrada."));
     }

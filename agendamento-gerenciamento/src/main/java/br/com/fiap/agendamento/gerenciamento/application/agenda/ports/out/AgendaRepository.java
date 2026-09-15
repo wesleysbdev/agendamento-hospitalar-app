@@ -16,4 +16,6 @@ public interface AgendaRepository {
     List<Agenda> buscarPorHospital(UUID hospitalUuid);
 
     Agenda salvar(Agenda agenda);
+
+    Optional<Agenda> buscarPorMedicoEHospital(UUID medicoUuid, UUID hospitalUuid);
 }

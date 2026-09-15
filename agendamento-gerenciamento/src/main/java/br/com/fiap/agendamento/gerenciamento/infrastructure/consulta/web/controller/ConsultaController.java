@@ -4,7 +4,7 @@ import br.com.fiap.agendamento.gerenciamento.application.agenda.ports.in.GestaoC
 import br.com.fiap.agendamento.gerenciamento.application.consulta.ports.in.GestaoCadastroConsulta;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.consulta.PacienteDTO;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.in.GestaoConsultaUsuario;
-import br.com.fiap.agendamento.gerenciamento.domain.consulta.enums.ConsultaEstado;
+import br.com.fiap.agendamento.gerenciamento.domain.consulta.enums.StatusConsulta;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.config.security.SecurityContextProvider;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.consulta.web.dto.ConsultaRequest;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.consulta.web.dto.ConsultaResponse;
@@ -38,7 +38,7 @@ public class ConsultaController {
                 "Dra. Maria Silva",
                 "Hospital São Lucas",
                 "Av. Paulista, 1000 - São Paulo, SP",
-                ConsultaEstado.AGENDADA);
+                StatusConsulta.AGENDADA);
     }
 
     @PostMapping("atualizar/{uuid}")
@@ -50,7 +50,7 @@ public class ConsultaController {
                 "Dra. Maria Silva",
                 "Hospital São Lucas",
                 "Av. Paulista, 1000 - São Paulo, SP",
-                ConsultaEstado.AGENDADA);
+                StatusConsulta.AGENDADA);
     }
 
     @PostMapping("cancelar/{uuid}")
@@ -62,7 +62,7 @@ public class ConsultaController {
                 "Dra. Maria Silva",
                 "Hospital São Lucas",
                 "Av. Paulista, 1000 - São Paulo, SP",
-                ConsultaEstado.CANCELADA);
+                StatusConsulta.CANCELADA);
     }
 
     @PostMapping("confirmar/{uuid}")
@@ -74,6 +74,6 @@ public class ConsultaController {
                 "Dra. Maria Silva",
                 "Hospital São Lucas",
                 "Av. Paulista, 1000 - São Paulo, SP",
-                ConsultaEstado.CANCELADA);
+                StatusConsulta.CANCELADA);
     }
 }

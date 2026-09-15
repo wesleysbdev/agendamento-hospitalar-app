@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "usuario", uniqueConstraints = {@UniqueConstraint(name = "uk_usuario_uuid", columnNames = "uuid")})
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo", discriminatorType = DiscriminatorType.STRING)
 @Getter
@@ -18,8 +18,11 @@ public abstract class UsuarioModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_seq")
-    @SequenceGenerator(name = "usuario_seq", sequenceName = "usuarios_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "usuario_seq", sequenceName = "usuario_id_seq", allocationSize = 1)
     private Long id;
+
+    @Column(nullable = false, unique = true, length = 36)
+    private UUID uuid;
 
     @Column(nullable = false, length = 200)
     private String nome;
@@ -36,10 +39,8 @@ public abstract class UsuarioModel {
     @Column(nullable = false)
     private boolean excluido;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime criadoEm;
 
-    @Column(nullable = false, unique = true, length = 36)
-    private UUID uuid;
 }

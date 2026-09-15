@@ -9,14 +9,6 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface NotificacaoModelMapper {
 
-    default TipoNotificacao paraTipoNotificacao(NotificacaoModel.TipoNotificacaoModel tipoModel) {
-        return tipoModel == null ? null : TipoNotificacao.valueOf(tipoModel.name());
-    }
-
-    default NotificacaoModel.TipoNotificacaoModel paraTipoNotificacaoModel(TipoNotificacao tipo) {
-        return tipo == null ? null : NotificacaoModel.TipoNotificacaoModel.valueOf(tipo.name());
-    }
-
     Notificacao paraEntidade(NotificacaoModel model);
 
     NotificacaoModel paraModelo(Notificacao entidade);

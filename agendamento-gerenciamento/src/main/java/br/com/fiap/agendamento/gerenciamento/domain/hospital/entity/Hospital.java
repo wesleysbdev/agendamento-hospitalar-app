@@ -1,8 +1,6 @@
 package br.com.fiap.agendamento.gerenciamento.domain.hospital.entity;
 
 import br.com.fiap.agendamento.gerenciamento.domain.hospital.exception.HospitalDadosInvalidosException;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioDadosInvalidosException;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Email;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
 
 import java.time.DayOfWeek;
@@ -87,7 +85,7 @@ public class Hospital {
 
     private static void validarIdentificador(UUID uuid) {
         if (uuid == null || uuid.toString().isBlank()) {
-            throw new UsuarioDadosInvalidosException("UUID é obrigatório.");
+            throw new HospitalDadosInvalidosException("UUID é obrigatório.");
         }
     }
 
@@ -159,6 +157,20 @@ public class Hospital {
 
     public void excluir() {
         this.excluido = true;
+    }
+
+    public boolean funcionaNoDia(DayOfWeek diaDaSemana) {
+        if (diaDaSemana == null) {
+            return false;
+        }
+        return diaDaSemana.compareTo(diaSemanaInicio) >= 0 && diaDaSemana.compareTo(diaSemanaFim) <= 0;
+    }
+
+    public boolean funcionaNoHorario(LocalTime horario) {
+        if (horario == null) {
+            return false;
+        }
+        return !horario.isBefore(horaInicio) && !horario.isAfter(horaFim);
     }
 
     public UUID getUuid() {

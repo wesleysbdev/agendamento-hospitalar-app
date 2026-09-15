@@ -1,53 +1,114 @@
 package br.com.fiap.agendamento.gerenciamento.domain.consulta.entity;
 
-import br.com.fiap.agendamento.gerenciamento.domain.consulta.enums.ConsultaEstado;
-import br.com.fiap.agendamento.gerenciamento.domain.hospital.entity.Hospital;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Medico;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Paciente;
-
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
 
+import br.com.fiap.agendamento.gerenciamento.domain.agenda.entity.Agenda;
+import br.com.fiap.agendamento.gerenciamento.domain.consulta.enums.StatusConsulta;
+import br.com.fiap.agendamento.gerenciamento.domain.consulta.exception.ConsultaDadosInvalidosException;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Paciente;
+
 public class Consulta {
 
-    private final UUID uuid;
-    private LocalDateTime horario;
-    private Medico medico;
-    private Paciente paciente;
-    private Hospital hospital;
-    private ConsultaEstado estado;
+	private final UUID uuid;
+	private final Paciente paciente;
+	private final Agenda agenda;
+	private final LocalDate data;
+	private final LocalTime horario;
+	private StatusConsulta status;
 
-    public Consulta(UUID uuid, LocalDateTime horario, Medico medico, Paciente paciente, Hospital hospital, ConsultaEstado estado) {
-        this.uuid = uuid;
-        this.horario = horario;
-        this.medico = medico;
-        this.paciente = paciente;
-        this.hospital = hospital;
-        this.estado = estado;
-    }
+	private Consulta(UUID uuid, Paciente paciente, Agenda agenda, LocalDate data, LocalTime horario) {
+		this.uuid = uuid;
+		this.paciente = paciente;
+		this.agenda = agenda;
+		this.data = data;
+		this.horario = horario;
+		this.status = StatusConsulta.AGENDADA;
+	}
 
-    public UUID getUuid() {
-        return uuid;
-    }
+	public static Consulta agendar(UUID uuid, Paciente paciente, Agenda agenda, LocalDate data, LocalTime horario) {
+		if (uuid == null) {
+			throw new ConsultaDadosInvalidosException("UUID é obrigatório");
+		}
 
-    public LocalDateTime getHorario() {
-        return horario;
-    }
+		if (paciente == null) {
+			throw new ConsultaDadosInvalidosException("Paciente é obrigatório");
+		}
 
-    public Medico getMedico() {
-        return medico;
-    }
+		if (agenda == null) {
+			throw new ConsultaDadosInvalidosException("Agenda é obrigatória");
+		}
 
-    public Paciente getPaciente() {
-        return paciente;
-    }
+		if (data == null) {
+			throw new ConsultaDadosInvalidosException("Data é obrigatória");
+		}
 
-    public Hospital getHospital() {
-        return hospital;
-    }
+		if (horario == null) {
+			throw new ConsultaDadosInvalidosException("Horário é obrigatório");
+		}
 
-    public ConsultaEstado getEstado() {
-        return estado;
-    }
+		if (!agenda.possuiHorario(data.getDayOfWeek(), horario)) {
+			throw new ConsultaDadosInvalidosException("Horário não pertence à agenda");
+		}
+
+		return new Consulta(uuid, paciente, agenda, data, horario);
+	}
+
+	public void cancelar() {
+		if (status != StatusConsulta.AGENDADA && status != StatusConsulta.CONFIRMADA) {
+			throw new ConsultaDadosInvalidosException("A consulta não pode ser cancelada");
+		}
+
+		status = StatusConsulta.CANCELADA;
+	}
+
+	public void realizar() {
+		if (status != StatusConsulta.AGENDADA && status != StatusConsulta.CONFIRMADA) {
+			throw new ConsultaDadosInvalidosException("A consulta não pode ser realizada");
+		}
+
+		status = StatusConsulta.REALIZADA;
+	}
+
+	public void confirmar() {
+		if (status != StatusConsulta.AGENDADA) {
+			throw new ConsultaDadosInvalidosException("Somente consultas agendadas podem ser confirmadas");
+		}
+
+		status = StatusConsulta.CONFIRMADA;
+	}
+
+	public void marcarComoAusente() {
+		if (status != StatusConsulta.CONFIRMADA) {
+			throw new ConsultaDadosInvalidosException("Consulta não pode ser marcada como ausente");
+		}
+
+		status = StatusConsulta.AUSENTE;
+	}
+
+	public StatusConsulta getStatus() {
+		return status;
+	}
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public Paciente getPaciente() {
+		return paciente;
+	}
+
+	public Agenda getAgenda() {
+		return agenda;
+	}
+
+	public LocalDate getData() {
+		return data;
+	}
+
+	public LocalTime getHorario() {
+		return horario;
+	}
+
 }
