@@ -4,6 +4,7 @@ import br.com.fiap.agendamento.gerenciamento.application.agenda.dto.AgendaDTO;
 import br.com.fiap.agendamento.gerenciamento.application.agenda.dto.HorarioAgendaDTO;
 import br.com.fiap.agendamento.gerenciamento.application.agenda.ports.in.GestaoConsultaAgenda;
 import br.com.fiap.agendamento.gerenciamento.application.agenda.ports.out.AgendaRepository;
+import br.com.fiap.agendamento.gerenciamento.application.dto.UsuarioAutenticado;
 import br.com.fiap.agendamento.gerenciamento.domain.agenda.entity.Agenda;
 import br.com.fiap.agendamento.gerenciamento.domain.agenda.entity.HorarioAgenda;
 import br.com.fiap.agendamento.gerenciamento.domain.agenda.exception.AgendaNaoEncontradaException;
@@ -20,25 +21,25 @@ public class ConsultaAgendaUseCase implements GestaoConsultaAgenda {
     }
 
     @Override
-    public List<AgendaDTO> listarAgendas() {
+    public List<AgendaDTO> listarAgendas(UsuarioAutenticado usuarioAutenticado) {
         List<Agenda> agendas = agendaRepository.listar();
         return agendas.stream().map(this::converterParaDTO).toList();
     }
 
     @Override
-    public AgendaDTO buscarAgendaPorUuid(UUID uuid) {
+    public AgendaDTO buscarAgendaPorUuid(UUID uuid, UsuarioAutenticado usuarioAutenticado) {
         Agenda agenda = buscarPorUuid(uuid);
         return converterParaDTO(agenda);
     }
 
     @Override
-    public List<AgendaDTO> buscarAgendasPorMedico(UUID medicoUuid) {
+    public List<AgendaDTO> buscarAgendasPorMedico(UUID medicoUuid, UsuarioAutenticado usuarioAutenticado) {
         List<Agenda> agendas = agendaRepository.buscarPorMedico(medicoUuid);
         return agendas.stream().map(this::converterParaDTO).toList();
     }
 
     @Override
-    public List<AgendaDTO> buscarAgendasPorHospital(UUID hospitalUuid) {
+    public List<AgendaDTO> buscarAgendasPorHospital(UUID hospitalUuid, UsuarioAutenticado usuarioAutenticado) {
         List<Agenda> agendas = agendaRepository.buscarPorHospital(hospitalUuid);
         return agendas.stream().map(this::converterParaDTO).toList();
     }

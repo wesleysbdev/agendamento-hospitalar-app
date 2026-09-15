@@ -116,9 +116,9 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
         return horarios.stream().map(this::criarHorario).toList();
     }
 
-    private HorarioAgenda buscarHorarioNaAgenda(List<HorarioAgenda> horariosDaAgenda, UUID idBuscado) {
+    private HorarioAgenda buscarHorarioNaAgenda(List<HorarioAgenda> horariosDaAgenda, UUID uuidBuscado) {
         return horariosDaAgenda.stream()
-                .filter(obj -> idBuscado.equals(obj.getUuid()))
+                .filter(obj -> uuidBuscado.equals(obj.getUuid()))
                 .findFirst().orElseThrow(() -> new HorarioAgendaNaoEncontradoException());
     }
 }

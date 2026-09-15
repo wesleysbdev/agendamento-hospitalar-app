@@ -55,7 +55,7 @@ public class UsuarioController {
         return mapper.paraResponse(usuario);
     }
 
-    @PostMapping("/administrador")
+    @PostMapping("/administradores")
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioResponse cadastrarAdministrador(@RequestBody @Valid AdministradorCadastroRequest request) {
         UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
@@ -64,7 +64,7 @@ public class UsuarioController {
         return mapper.paraResponse(usuario);
     }
 
-    @PostMapping("/enfermeiro")
+    @PostMapping("/enfermeiros")
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioResponse cadastrarEnfermeiro(@RequestBody @Valid EnfermeiroCadastroRequest request) {
         UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();

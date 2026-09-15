@@ -1,18 +1,37 @@
 package br.com.fiap.agendamento.gerenciamento.infrastructure.agenda.web.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
 public record AgendaRequest(
-        @NotNull(message = "O campo medicoUuid é obrigatório.")
-        UUID medicoUuid,
         @NotNull(message = "O campo hospitalUuid é obrigatório.")
         UUID hospitalUuid,
-        @NotNull(message = "O campo horarios são obrigatórios.")
-        List<HorarioAgendaRequest> horarios
+        @NotEmpty(message = "O campo horarios deve possuir pelo menos um horário.")
+        List<@Valid HorarioAgendaRequest> horarios
 ) {
 }
+
+
+//mock
+//
+//{
+//        "hospitalUuid": "UUID_DO_HOSPITAL",
+//        "horarios": [
+//        {
+//                "diaSemana": "MONDAY",
+//                "horario": "08:00"
+//        },
+//        {
+//                "diaSemana": "MONDAY",
+//                "horario": "09:00"
+//        },
+//        {
+//                "diaSemana": "WEDNESDAY",
+//                "horario": "14:00"
+//        }
+//  ]
+//}
