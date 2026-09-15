@@ -5,6 +5,7 @@ import br.com.fiap.agendamento.gerenciamento.domain.agenda.entity.Agenda;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.agenda.persistence.mapper.AgendaModelMapper;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.agenda.persistence.model.AgendaModel;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.agenda.persistence.repository.AgendaDatasourceRepository;
+import br.com.fiap.agendamento.gerenciamento.infrastructure.consulta.persistence.repository.ConsultaDatasourceRepository;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.hospital.persistence.model.HospitalModel;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.hospital.persistence.repository.HospitalDatasourceRepository;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.persistence.model.MedicoModel;
@@ -12,6 +13,8 @@ import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.persistence.
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,7 +37,7 @@ public class AgendaRepositoryAdapter implements AgendaRepository {
     }
 
     @Override
-    public Optional<Agenda> buscarPorUuid(UUID uuid) {
+    public Optional<Agenda> buscarPorId(UUID uuid) {
         return repository.findWithRelacionamentosById(uuid).map(mapper::paraEntidade);
     }
 

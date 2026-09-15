@@ -1,11 +1,20 @@
 package br.com.fiap.agendamento.gerenciamento.application.consulta.ports.in;
 
+import br.com.fiap.agendamento.gerenciamento.application.consulta.dto.ConsultaCadastroDTO;
+import br.com.fiap.agendamento.gerenciamento.application.dto.UsuarioAutenticado;
 import br.com.fiap.agendamento.gerenciamento.domain.consulta.entity.Consulta;
+
+import java.util.UUID;
 
 public interface GestaoCadastroConsulta {
 
-    // TODO: Implementar parâmetros do request
-    Consulta cadastrarConsulta();
+    Consulta cadastrarConsulta(ConsultaCadastroDTO consultaCadastroDTO, UsuarioAutenticado usuarioAutenticado);
 
-    Consulta atualizarConsulta(Consulta consulta);
+    Consulta cancelarConsulta(UUID consultaId, UsuarioAutenticado usuarioAutenticado);
+
+    Consulta realizarConsulta(UUID consultaId, UsuarioAutenticado usuarioAutenticado);
+
+    Consulta confirmarConsulta(UUID consultaId, UsuarioAutenticado usuarioAutenticado);
+
+    Consulta marcarComoAusente(UUID consultaId, UsuarioAutenticado usuarioAutenticado);
 }

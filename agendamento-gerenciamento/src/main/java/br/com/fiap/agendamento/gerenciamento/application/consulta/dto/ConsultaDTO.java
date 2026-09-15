@@ -1,11 +1,11 @@
-package br.com.fiap.agendamento.gerenciamento.infrastructure.consulta.web.dto;
+package br.com.fiap.agendamento.gerenciamento.application.consulta.dto;
 
 import br.com.fiap.agendamento.gerenciamento.domain.consulta.enums.StatusConsulta;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record ConsultaResponse(
+public record ConsultaDTO(
         UUID id,
         LocalDateTime horario,
         String medicoNome,

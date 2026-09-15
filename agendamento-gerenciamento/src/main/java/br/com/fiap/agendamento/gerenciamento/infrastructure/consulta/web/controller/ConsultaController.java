@@ -1,19 +1,21 @@
 package br.com.fiap.agendamento.gerenciamento.infrastructure.consulta.web.controller;
 
-import br.com.fiap.agendamento.gerenciamento.application.agenda.ports.in.GestaoConsultaAgenda;
+import br.com.fiap.agendamento.gerenciamento.application.consulta.dto.ConsultaCadastroDTO;
+import br.com.fiap.agendamento.gerenciamento.application.consulta.dto.ConsultaDTO;
 import br.com.fiap.agendamento.gerenciamento.application.consulta.ports.in.GestaoCadastroConsulta;
-import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.consulta.PacienteDTO;
-import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.in.GestaoConsultaUsuario;
-import br.com.fiap.agendamento.gerenciamento.domain.consulta.enums.StatusConsulta;
+import br.com.fiap.agendamento.gerenciamento.application.consulta.ports.in.GestaoConsultaConsulta;
+import br.com.fiap.agendamento.gerenciamento.application.dto.UsuarioAutenticado;
+import br.com.fiap.agendamento.gerenciamento.domain.consulta.entity.Consulta;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.config.security.SecurityContextProvider;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.consulta.web.dto.ConsultaRequest;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.consulta.web.dto.ConsultaResponse;
+import br.com.fiap.agendamento.gerenciamento.infrastructure.consulta.web.mapper.ConsultaMapper;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -22,62 +24,81 @@ import java.util.UUID;
 public class ConsultaController {
 
     private final GestaoCadastroConsulta cadastroConsulta;
-    private final GestaoConsultaUsuario consultaUsuario;
-    private final GestaoConsultaAgenda consultaAgenda;
+    private final GestaoConsultaConsulta gestaoConsulta;
+    private final ConsultaMapper mapper;
     private final SecurityContextProvider contextProvider;
 
-    @PostMapping("agendar")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ConsultaResponse agendarConsulta(@RequestBody @Valid ConsultaRequest request) {
-        System.out.println("Agendamento de consulta");
-//        var paciente = consultaUsuario.buscarUsuarioPorUuid(request.pacienteId(), contextProvider.obterUsuarioAutenticado());
-//        var agenda = consultaAgenda.buscarAgendaPorUuid(request.agendaId());
-        cadastroConsulta.cadastrarConsulta();
-        return new ConsultaResponse(
-                UUID.randomUUID(),
-                LocalTime.of(14, 30),
-                "Dra. Maria Silva",
-                "Hospital São Lucas",
-                "Av. Paulista, 1000 - São Paulo, SP",
-                StatusConsulta.AGENDADA);
+        UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
+        ConsultaCadastroDTO consultaDTO = mapper.paraDTO(request);
+        Consulta consulta = cadastroConsulta.cadastrarConsulta(consultaDTO, usuarioAutenticado);
+        return mapper.paraResponse(consulta);
     }
 
-    @PostMapping("atualizar/{uuid}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ConsultaResponse atualizarConsulta(@PathVariable UUID uuid) {
-        System.out.println("Atualização de consulta");
-        return new ConsultaResponse(
-                UUID.randomUUID(),
-                LocalTime.of(14, 30),
-                "Dra. Maria Silva",
-                "Hospital São Lucas",
-                "Av. Paulista, 1000 - São Paulo, SP",
-                StatusConsulta.AGENDADA);
-    }
-
-    @PostMapping("cancelar/{uuid}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("{uuid}/cancelar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ConsultaResponse cancelarConsulta(@PathVariable UUID uuid) {
-        System.out.println("Cancelamento de consulta");
-        return new ConsultaResponse(
-                UUID.randomUUID(),
-                LocalTime.of(14, 30),
-                "Dra. Maria Silva",
-                "Hospital São Lucas",
-                "Av. Paulista, 1000 - São Paulo, SP",
-                StatusConsulta.CANCELADA);
+        UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
+        Consulta consulta = cadastroConsulta.cancelarConsulta(uuid, usuarioAutenticado);
+        return mapper.paraResponse(consulta);
     }
 
-    @PostMapping("confirmar/{uuid}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("{uuid}/confirmar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ConsultaResponse confirmarConsulta(@PathVariable UUID uuid) {
-        System.out.println("Confirmação de consulta");
-        return new ConsultaResponse(
-                UUID.randomUUID(),
-                LocalTime.of(14, 30),
-                "Dra. Maria Silva",
-                "Hospital São Lucas",
-                "Av. Paulista, 1000 - São Paulo, SP",
-                StatusConsulta.CANCELADA);
+        UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
+        Consulta consulta = cadastroConsulta.confirmarConsulta(uuid, usuarioAutenticado);
+        return mapper.paraResponse(consulta);
     }
+
+    @PostMapping("{uuid}/realizar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ConsultaResponse realizarConsulta(@PathVariable UUID uuid) {
+        UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
+        Consulta consulta = cadastroConsulta.realizarConsulta(uuid, usuarioAutenticado);
+        return mapper.paraResponse(consulta);
+    }
+
+    @PostMapping("{uuid}/ausentar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ConsultaResponse marcarComoAusente(@PathVariable UUID uuid) {
+        UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
+        Consulta consulta = cadastroConsulta.marcarComoAusente(uuid, usuarioAutenticado);
+        return mapper.paraResponse(consulta);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<ConsultaResponse> consulta() {
+        UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
+        List<ConsultaDTO> consultas = gestaoConsulta.listarConsultar(usuarioAutenticado);
+        return consultas.stream().map(mapper::paraResponse).toList();
+    }
+
+    @GetMapping("{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public ConsultaResponse consulta(@RequestParam UUID uuid) {
+        UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
+        ConsultaDTO consulta = gestaoConsulta.buscarPorId(uuid, usuarioAutenticado);
+        return mapper.paraResponse(consulta);
+    }
+
+    @GetMapping("pacientes/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ConsultaResponse> consultaPorPaciente(@RequestParam UUID uuid) {
+        UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
+        List<ConsultaDTO> consultas = gestaoConsulta.listarConsultasPorPaciente(uuid, usuarioAutenticado);
+        return consultas.stream().map(mapper::paraResponse).toList();
+    }
+
+    @GetMapping("medicos/{uuid}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ConsultaResponse> consultaPorMedico(@RequestParam UUID uuid) {
+        UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
+        List<ConsultaDTO> consultas = gestaoConsulta.listarConsultasMedico(uuid, usuarioAutenticado);
+        return consultas.stream().map(mapper::paraResponse).toList();
+    }
+
 }

@@ -66,7 +66,7 @@ public class ConsultaAgendaUseCase implements GestaoConsultaAgenda {
     }
 
     private Agenda buscarPorUuid(UUID uuid) {
-        return agendaRepository.buscarPorUuid(uuid)
+        return agendaRepository.buscarPorId(uuid)
                 .orElseThrow(() -> new AgendaNaoEncontradaException("Agenda não encontrada."));
     }
 }
