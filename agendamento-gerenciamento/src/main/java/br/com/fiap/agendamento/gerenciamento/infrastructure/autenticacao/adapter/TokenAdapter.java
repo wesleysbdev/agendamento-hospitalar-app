@@ -35,7 +35,7 @@ public class TokenAdapter implements GeradorTokenAutenticacao {
                 .issuer(appName)
                 .issuedAt(agora)
                 .expiresAt(agora.plusSeconds(expirationSeconds))
-                .subject(usuario.getUuid().toString())
+                .subject(usuario.getId().toString())
                 .claim("role", usuario.getTipo().name())
                 .claim("nome", usuario.getNome())
                 .build();

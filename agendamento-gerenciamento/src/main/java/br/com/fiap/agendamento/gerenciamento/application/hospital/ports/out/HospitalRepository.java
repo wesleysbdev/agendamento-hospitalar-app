@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface HospitalRepository {
     List<Hospital> listar();
 
-    Optional<Hospital> buscarPorUuid(UUID uuid);
+    Optional<Hospital> buscarPorId(UUID uuid);
 
     Hospital salvar(Hospital hospital);
 }

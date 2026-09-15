@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.UUID;
 
 public record AgendaRequest(
-        @NotNull(message = "O campo hospitalUuid é obrigatório.")
-        UUID hospitalUuid,
+        @NotNull(message = "O campo hospitalId é obrigatório.")
+        UUID hospitalId,
         @NotEmpty(message = "O campo horarios deve possuir pelo menos um horário.")
         List<@Valid HorarioAgendaRequest> horarios
 ) {
@@ -19,7 +19,7 @@ public record AgendaRequest(
 //mock
 //
 //{
-//        "hospitalUuid": "UUID_DO_HOSPITAL",
+//        "hospitalId": "UUID_DO_HOSPITAL",
 //        "horarios": [
 //        {
 //                "diaSemana": "MONDAY",

@@ -9,8 +9,8 @@ import java.util.UUID;
 public final class Medico extends Usuario {
     private Crm crm;
 
-    public Medico(UUID uuid, String nome, Email email, String senha, boolean ativo, Crm crm, boolean excluido) {
-        super(uuid, nome, email, senha, ativo, excluido);
+    public Medico(UUID id, String nome, Email email, String senha, boolean ativo, Crm crm, boolean excluido) {
+        super(id, nome, email, senha, ativo, excluido);
         this.crm = crm;
     }
 

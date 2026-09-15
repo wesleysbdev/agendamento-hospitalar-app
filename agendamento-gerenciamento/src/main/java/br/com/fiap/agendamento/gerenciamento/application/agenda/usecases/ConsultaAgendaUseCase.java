@@ -46,10 +46,10 @@ public class ConsultaAgendaUseCase implements GestaoConsultaAgenda {
 
     private AgendaDTO converterParaDTO(Agenda agenda) {
         return new AgendaDTO(
-                agenda.getUuid(),
-                agenda.getMedico().getUuid(),
+                agenda.getId(),
+                agenda.getMedico().getId(),
                 agenda.getMedico().getNome(),
-                agenda.getHospital().getUuid(),
+                agenda.getHospital().getId(),
                 agenda.getHospital().getNome(),
                 converterHorarioAgendaParaDTO(agenda.getHorarios())
         );
@@ -58,7 +58,7 @@ public class ConsultaAgendaUseCase implements GestaoConsultaAgenda {
     private List<HorarioAgendaDTO> converterHorarioAgendaParaDTO(List<HorarioAgenda> horarios) {
         return horarios.stream().map(
                 horarioAgenda -> new HorarioAgendaDTO(
-                        horarioAgenda.getUuid(),
+                        horarioAgenda.getId(),
                         horarioAgenda.getDiaSemana(),
                         horarioAgenda.getHorario()
                 )

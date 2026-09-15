@@ -4,6 +4,8 @@ import br.com.fiap.agendamento.gerenciamento.infrastructure.consulta.persistence
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
-public interface ConsultaDatasourceRepository extends JpaRepository<ConsultaModel, Long> {
+public interface ConsultaDatasourceRepository extends JpaRepository<ConsultaModel, UUID> {
 }

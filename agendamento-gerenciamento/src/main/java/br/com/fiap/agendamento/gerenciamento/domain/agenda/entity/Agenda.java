@@ -13,15 +13,15 @@ import java.util.UUID;
 
 public class Agenda {
 
-    private final UUID uuid;
+    private final UUID id;
     private final Medico medico;
     private final Hospital hospital;
     private List<HorarioAgenda> horarios;
 
-    public Agenda(UUID uuid, Medico medico, Hospital hospital, List<HorarioAgenda> horarios) {
-        validarDadosObrigatorios(uuid, medico, hospital, horarios);
+    public Agenda(UUID id, Medico medico, Hospital hospital, List<HorarioAgenda> horarios) {
+        validarDadosObrigatorios(id, medico, hospital, horarios);
 
-        this.uuid = uuid;
+        this.id = id;
         this.medico = medico;
         this.hospital = hospital;
         this.horarios = new ArrayList<>(horarios);
@@ -29,8 +29,8 @@ public class Agenda {
         validarHorarios(this.horarios);
     }
 
-    private void validarDadosObrigatorios(UUID uuid, Medico medico, Hospital hospital, List<HorarioAgenda> horarios) {
-        if (uuid == null) {
+    private void validarDadosObrigatorios(UUID id, Medico medico, Hospital hospital, List<HorarioAgenda> horarios) {
+        if (id == null) {
             throw new AgendaDadosInvalidosException("UUID da agenda é obrigatório");
         }
 
@@ -140,8 +140,8 @@ public class Agenda {
         return horarios.stream().anyMatch(h -> h.getDiaSemana().equals(diaSemana) && h.getHorario().equals(horario));
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getId() {
+        return id;
     }
 
     public Medico getMedico() {

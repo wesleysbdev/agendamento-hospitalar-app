@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public final class Enfermeiro extends Usuario {
 
-    public Enfermeiro(UUID uuid, String nome, Email email, String senha, boolean ativo, boolean excluido) {
-        super(uuid, nome, email, senha, ativo, excluido);
+    public Enfermeiro(UUID id, String nome, Email email, String senha, boolean ativo, boolean excluido) {
+        super(id, nome, email, senha, ativo, excluido);
     }
 
     @Override

@@ -5,7 +5,7 @@ import br.com.fiap.agendamento.gerenciamento.domain.usuario.enums.TipoUsuario;
 import java.util.UUID;
 
 public record AdministradorDTO(
-        UUID uuid,
+        UUID id,
         String nome,
         String email,
         boolean ativo,

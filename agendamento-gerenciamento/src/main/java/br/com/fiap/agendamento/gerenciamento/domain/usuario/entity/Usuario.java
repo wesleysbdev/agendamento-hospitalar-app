@@ -8,16 +8,16 @@ import java.util.UUID;
 
 public abstract sealed class Usuario permits Administrador, Medico, Paciente, Enfermeiro {
 
-    private final UUID uuid;
+    private final UUID id;
     private String nome;
     private Email email;
     private String senha;
     private boolean ativo;
     private boolean excluido;
 
-    public Usuario(UUID uuid, String nome, Email email, String senha, boolean ativo, boolean excluido) {
-        validarDadosObrigatorios(uuid, nome, email, senha);
-        this.uuid = uuid;
+    public Usuario(UUID id, String nome, Email email, String senha, boolean ativo, boolean excluido) {
+        validarDadosObrigatorios(id, nome, email, senha);
+        this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
@@ -63,8 +63,8 @@ public abstract sealed class Usuario permits Administrador, Medico, Paciente, En
         this.senha = senhaHash;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getId() {
+        return id;
     }
 
     public String getNome() {

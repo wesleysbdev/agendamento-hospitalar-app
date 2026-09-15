@@ -25,13 +25,13 @@ public class HospitalRepositoryAdapter implements HospitalRepository {
     }
 
     @Override
-    public Optional<Hospital> buscarPorUuid(UUID uuid) {
-        return repository.findByUuid(uuid).map(mapper::paraEntidade);
+    public Optional<Hospital> buscarPorId(UUID uuid) {
+        return repository.findById(uuid).map(mapper::paraEntidade);
     }
 
     @Override
     public Hospital salvar(Hospital hospital) {
-        HospitalModel model = repository.findByUuid(hospital.getUuid())
+        HospitalModel model = repository.findById(hospital.getId())
                 .map(existente -> {
                     mapper.atualizarModelo(hospital, existente);
                     return existente;

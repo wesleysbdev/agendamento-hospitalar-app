@@ -48,7 +48,7 @@ public class HospitalController {
     @ResponseStatus(HttpStatus.OK)
     public HospitalResponse consultarPorUuid(@PathVariable UUID uuid) {
         UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
-        HospitalDTO hospital = consultaHospital.buscarHospitalPorUuid(uuid, usuarioAutenticado);
+        HospitalDTO hospital = consultaHospital.buscarHospitalPorId(uuid, usuarioAutenticado);
         return mapper.paraResponse(hospital);
     }
 

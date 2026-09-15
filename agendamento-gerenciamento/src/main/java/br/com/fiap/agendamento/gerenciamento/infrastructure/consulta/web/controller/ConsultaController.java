@@ -30,10 +30,11 @@ public class ConsultaController {
     @ResponseStatus(HttpStatus.CREATED)
     public ConsultaResponse agendarConsulta(@RequestBody @Valid ConsultaRequest request) {
         System.out.println("Agendamento de consulta");
-//        var paciente = consultaUsuario.buscarUsuarioPorUuid(request.pacienteUuid(), contextProvider.obterUsuarioAutenticado());
-//        var agenda = consultaAgenda.buscarAgendaPorUuid(request.agendaUuid());
+//        var paciente = consultaUsuario.buscarUsuarioPorUuid(request.pacienteId(), contextProvider.obterUsuarioAutenticado());
+//        var agenda = consultaAgenda.buscarAgendaPorUuid(request.agendaId());
         cadastroConsulta.cadastrarConsulta();
         return new ConsultaResponse(
+                UUID.randomUUID(),
                 LocalTime.of(14, 30),
                 "Dra. Maria Silva",
                 "Hospital São Lucas",
@@ -46,6 +47,7 @@ public class ConsultaController {
     public ConsultaResponse atualizarConsulta(@PathVariable UUID uuid) {
         System.out.println("Atualização de consulta");
         return new ConsultaResponse(
+                UUID.randomUUID(),
                 LocalTime.of(14, 30),
                 "Dra. Maria Silva",
                 "Hospital São Lucas",
@@ -58,6 +60,7 @@ public class ConsultaController {
     public ConsultaResponse cancelarConsulta(@PathVariable UUID uuid) {
         System.out.println("Cancelamento de consulta");
         return new ConsultaResponse(
+                UUID.randomUUID(),
                 LocalTime.of(14, 30),
                 "Dra. Maria Silva",
                 "Hospital São Lucas",
@@ -70,6 +73,7 @@ public class ConsultaController {
     public ConsultaResponse confirmarConsulta(@PathVariable UUID uuid) {
         System.out.println("Confirmação de consulta");
         return new ConsultaResponse(
+                UUID.randomUUID(),
                 LocalTime.of(14, 30),
                 "Dra. Maria Silva",
                 "Hospital São Lucas",

@@ -14,7 +14,7 @@ import java.util.UUID;
 @Table(
         name = "agenda_horario",
         uniqueConstraints = {
-                @UniqueConstraint(name = "uk_agenda_horario_uuid", columnNames = "uuid"),
+                @UniqueConstraint(name = "uk_agenda_horario_id", columnNames = "id"),
                 @UniqueConstraint(name = "uk_agenda_horario_dia_horario", columnNames = {"agenda_id", "dia_semana", "horario"})
         })
 @Getter
@@ -22,12 +22,8 @@ import java.util.UUID;
 public class HorarioAgendaModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "agenda_horario_seq")
-    @SequenceGenerator(name = "agenda_horario_seq", sequenceName = "agenda_horario_id_seq", allocationSize = 1)
-    private Long id;
-
-    @Column(nullable = false, unique = true, length = 36)
-    private UUID uuid;
+    @Column(nullable = false, unique = true, updatable = false, length = 36)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "agenda_id", nullable = false, foreignKey = @ForeignKey(name = "fk_agenda_horario_agenda"))

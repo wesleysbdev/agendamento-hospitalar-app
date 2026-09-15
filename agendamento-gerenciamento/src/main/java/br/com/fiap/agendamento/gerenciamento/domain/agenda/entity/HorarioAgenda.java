@@ -9,19 +9,19 @@ import java.util.UUID;
 
 public class HorarioAgenda {
 
-    private final UUID uuid;
+    private final UUID id;
     private final DayOfWeek diaSemana;
     private final LocalTime horario;
 
-    public HorarioAgenda(UUID uuid, DayOfWeek diaSemana, LocalTime horario) {
-        validarDadosObrigatorios(uuid, diaSemana, horario);
-        this.uuid = uuid;
+    public HorarioAgenda(UUID id, DayOfWeek diaSemana, LocalTime horario) {
+        validarDadosObrigatorios(id, diaSemana, horario);
+        this.id = id;
         this.diaSemana = diaSemana;
         this.horario = horario;
     }
 
-    private void validarDadosObrigatorios(UUID uuid, DayOfWeek diaSemana, LocalTime horario) {
-        if (uuid == null) {
+    private void validarDadosObrigatorios(UUID id, DayOfWeek diaSemana, LocalTime horario) {
+        if (id == null) {
             throw new AgendaDadosInvalidosException("UUID é obrigatório");
         }
 
@@ -34,8 +34,8 @@ public class HorarioAgenda {
         }
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public UUID getId() {
+        return id;
     }
 
     public DayOfWeek getDiaSemana() {

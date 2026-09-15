@@ -13,9 +13,9 @@ public interface AgendaMapper {
 
     AgendaCadastroDTO paraDTO(AgendaRequest request);
 
-    @Mapping(source = "medico.uuid", target = "medicoUuid")
+    @Mapping(source = "medico.id", target = "medicoId")
     @Mapping(source = "medico.nome", target = "medicoNome")
-    @Mapping(source = "hospital.uuid", target = "hospitalUuid")
+    @Mapping(source = "hospital.id", target = "hospitalId")
     @Mapping(source = "hospital.nome", target = "hospitalNome")
     AgendaResponse paraResponse(Agenda agenda);
 

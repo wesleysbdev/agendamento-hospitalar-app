@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface UsuarioRepository {
     List<Usuario> listar();
 
-    Optional<Usuario> buscarPorUuid(UUID uuid);
+    Optional<Usuario> buscarPorId(UUID uuid);
 
     List<Usuario> listarPorTipo(TipoUsuario tipoUsuario);
 

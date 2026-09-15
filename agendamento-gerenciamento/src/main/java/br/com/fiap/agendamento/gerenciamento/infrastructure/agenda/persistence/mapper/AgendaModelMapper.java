@@ -33,7 +33,6 @@ public interface AgendaModelMapper {
     }
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "uuid", ignore = true)
     @Mapping(target = "medico", ignore = true)
     @Mapping(target = "hospital", ignore = true)
     void atualizarModelo(
