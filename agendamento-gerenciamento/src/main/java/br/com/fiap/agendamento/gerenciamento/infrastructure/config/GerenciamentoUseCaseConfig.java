@@ -6,9 +6,11 @@ import br.com.fiap.agendamento.gerenciamento.application.agenda.ports.out.Agenda
 import br.com.fiap.agendamento.gerenciamento.application.agenda.usecases.CadastroAgendaUseCase;
 import br.com.fiap.agendamento.gerenciamento.application.agenda.usecases.ConsultaAgendaUseCase;
 import br.com.fiap.agendamento.gerenciamento.application.consulta.ports.in.GestaoCadastroConsulta;
+import br.com.fiap.agendamento.gerenciamento.application.consulta.ports.in.GestaoConsultaConsulta;
 import br.com.fiap.agendamento.gerenciamento.application.consulta.ports.out.ConsultaEventPublisher;
 import br.com.fiap.agendamento.gerenciamento.application.consulta.ports.out.ConsultaRepository;
-import br.com.fiap.agendamento.gerenciamento.application.consulta.usecases.CriarConsultaUseCase;
+import br.com.fiap.agendamento.gerenciamento.application.consulta.usecases.CadastroConsultaUseCase;
+import br.com.fiap.agendamento.gerenciamento.application.consulta.usecases.ConsultaConsultaUseCase;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.in.GestaoCadastroHospital;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.in.GestaoConsultaHospital;
 import br.com.fiap.agendamento.gerenciamento.application.hospital.ports.out.HospitalRepository;
@@ -25,7 +27,6 @@ import br.com.fiap.agendamento.gerenciamento.application.usuario.usecases.Autent
 import br.com.fiap.agendamento.gerenciamento.application.usuario.usecases.CadastroUsuarioUseCase;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.usecases.ConsultaUsuarioUseCase;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.usecases.EditarUsuarioUseCase;
-import br.com.fiap.agendamento.gerenciamento.infrastructure.config.security.SecurityContextProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -53,8 +54,13 @@ public class GerenciamentoUseCaseConfig {
     }
 
     @Bean
-    public GestaoCadastroConsulta criarConsultaUseCase(ConsultaEventPublisher consultaEventPublisher, ConsultaRepository repository, SecurityContextProvider securityContextProvider) {
-        return new CriarConsultaUseCase(repository, consultaEventPublisher, securityContextProvider);
+    public GestaoCadastroConsulta criarConsultaUseCase(ConsultaEventPublisher consultaEventPublisher, ConsultaRepository repository, UsuarioRepository usuarioRepository, AgendaRepository agendaRepository) {
+        return new CadastroConsultaUseCase(repository, usuarioRepository, agendaRepository, consultaEventPublisher);
+    }
+
+    @Bean
+    public GestaoConsultaConsulta gestaoConsultaUseCase(ConsultaRepository repository, UsuarioRepository usuarioRepository) {
+        return new ConsultaConsultaUseCase(repository, usuarioRepository);
     }
 
     @Bean

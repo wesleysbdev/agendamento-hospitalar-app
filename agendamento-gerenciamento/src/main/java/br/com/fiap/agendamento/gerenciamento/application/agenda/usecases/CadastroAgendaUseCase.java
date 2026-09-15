@@ -100,7 +100,7 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
     }
 
     private Agenda buscarAgendaPorUuid(UUID uuid) {
-        return agendaRepository.buscarPorUuid(uuid)
+        return agendaRepository.buscarPorId(uuid)
                 .orElseThrow(() -> new AgendaNaoEncontradaException("Agenda não encontrada."));
     }
 

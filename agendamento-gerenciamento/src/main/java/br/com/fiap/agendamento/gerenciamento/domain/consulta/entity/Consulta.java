@@ -18,7 +18,8 @@ public class Consulta {
     private final LocalTime horario;
     private StatusConsulta status;
 
-    private Consulta(UUID id, Paciente paciente, Agenda agenda, LocalDate data, LocalTime horario) {
+    public Consulta(UUID id, Paciente paciente, Agenda agenda, LocalDate data, LocalTime horario) {
+        validarDadosObrigatorios(id, paciente, agenda, data, horario);
         this.id = id;
         this.paciente = paciente;
         this.agenda = agenda;
@@ -27,8 +28,8 @@ public class Consulta {
         this.status = StatusConsulta.AGENDADA;
     }
 
-    public static Consulta agendar(UUID uuid, Paciente paciente, Agenda agenda, LocalDate data, LocalTime horario) {
-        if (uuid == null) {
+    private static void validarDadosObrigatorios(UUID id, Paciente paciente, Agenda agenda, LocalDate data, LocalTime horario) {
+        if (id == null) {
             throw new ConsultaDadosInvalidosException("UUID é obrigatório");
         }
 
@@ -51,8 +52,6 @@ public class Consulta {
         if (!agenda.possuiHorario(data.getDayOfWeek(), horario)) {
             throw new ConsultaDadosInvalidosException("Horário não pertence à agenda");
         }
-
-        return new Consulta(uuid, paciente, agenda, data, horario);
     }
 
     public void cancelar() {
