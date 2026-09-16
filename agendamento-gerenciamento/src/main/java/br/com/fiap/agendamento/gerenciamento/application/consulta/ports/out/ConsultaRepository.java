@@ -1,5 +1,6 @@
 package br.com.fiap.agendamento.gerenciamento.application.consulta.ports.out;
 
+import br.com.fiap.agendamento.gerenciamento.application.consulta.dto.ConsultaDTO;
 import br.com.fiap.agendamento.gerenciamento.domain.consulta.entity.Consulta;
 
 import java.time.LocalDate;
@@ -14,11 +15,11 @@ public interface ConsultaRepository {
 
     Optional<Consulta> buscarPorId(UUID uuid);
 
-    List<Consulta> buscarTodos();
+    List<ConsultaDTO> buscarTodos();
 
     boolean existeConsulta(UUID agendaId, LocalDate data, LocalTime hora);
 
-    List<Consulta> buscarPorPacienteId(UUID id);
+    List<ConsultaDTO> buscarPorPacienteId(UUID id);
 
-    List<Consulta> buscarPorMedicoId(UUID id);
+    List<ConsultaDTO> buscarPorMedicoId(UUID id);
 }

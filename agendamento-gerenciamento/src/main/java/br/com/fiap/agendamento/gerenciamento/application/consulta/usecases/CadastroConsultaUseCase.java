@@ -20,6 +20,7 @@ import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Paciente;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Usuario;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.enums.TipoUsuario;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -56,7 +57,7 @@ public class CadastroConsultaUseCase implements GestaoCadastroConsulta {
 
     private static void validarPaciente(Paciente paciente, UsuarioAutenticado usuarioAutenticado) {
         if (!paciente.isAtivo() || paciente.isExcluido()) {
-            throw new ConsultaDadosInvalidosException("O hospital não pode receber atendimentos.");
+            throw new ConsultaDadosInvalidosException("O paciente não está apto para agendar consultas.");
         }
 
         if (usuarioAutenticado.tipo() == TipoUsuario.PACIENTE && !usuarioAutenticado.uuid().equals(paciente.getId())) {
@@ -83,7 +84,7 @@ public class CadastroConsultaUseCase implements GestaoCadastroConsulta {
                         ConsultaEventType.CONSULTA_CRIADA,
                         consulta.getId(),
                         consulta.getPaciente().getId(),
-                        LocalDateTime.now()
+                        consulta.getData().atTime(consulta.getHorario())
                 )
         );
 
@@ -155,6 +156,10 @@ public class CadastroConsultaUseCase implements GestaoCadastroConsulta {
     }
 
     private void validarAgendamento(Agenda agenda, ConsultaCadastroDTO consulta, HorarioAgenda horario) {
+        if (consulta.data().isBefore(LocalDate.now())) {
+            throw new ConsultaDadosInvalidosException("A data da consulta não pode estar no passado.");
+        }
+
         validarMedico(agenda.getMedico());
         validarHospital(agenda.getHospital());
 

@@ -39,21 +39,3 @@ public interface HospitalMapper {
                 : Duration.ofMinutes(minutos);
     }
 }
-
-
-//mock
-//
-//{
-//    "nome": "Hospital São João",
-//        "endereco": "Rua das Flores, 100",
-//        "telefone": "11999999999",
-//        "ativo": true,
-//        "excluido": false,
-//        "diaSemanaInicio": "MONDAY",
-//        "diaSemanaFim": "FRIDAY",
-//        "horaInicio": "08:00:00",
-//        "horaFim": "18:00:00",
-//        "tempoLimiteCancelamento": "PT2H",
-//        "tempoToleranciaPosConsulta": "PT15M",
-//        "tempoMinimoConsulta": "PT30M"
-//}

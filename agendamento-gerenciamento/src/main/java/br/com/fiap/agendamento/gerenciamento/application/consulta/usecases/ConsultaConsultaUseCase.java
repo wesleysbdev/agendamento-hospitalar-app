@@ -23,8 +23,7 @@ public class ConsultaConsultaUseCase implements GestaoConsultaConsulta {
 
     @Override
     public List<ConsultaDTO> listarConsultar(UsuarioAutenticado usuarioAutenticado) {
-        List<Consulta> consultas = repository.buscarTodos();
-        return consultas.stream().map(this::converterParaDTO).toList();
+        return repository.buscarTodos();
     }
 
     @Override
@@ -35,14 +34,12 @@ public class ConsultaConsultaUseCase implements GestaoConsultaConsulta {
 
     @Override
     public List<ConsultaDTO> listarConsultasPorPaciente(UUID id, UsuarioAutenticado usuarioAutenticado) {
-        List<Consulta> consultas = repository.buscarPorPacienteId(id);
-        return consultas.stream().map(this::converterParaDTO).toList();
+        return repository.buscarPorPacienteId(id);
     }
 
     @Override
     public List<ConsultaDTO> listarConsultasMedico(UUID id, UsuarioAutenticado usuarioAutenticado) {
-        List<Consulta> consultas = repository.buscarPorMedicoId(id);
-        return consultas.stream().map(this::converterParaDTO).toList();
+        return repository.buscarPorMedicoId(id);
     }
 
     private Consulta buscarConsultaPorId(UUID id) {

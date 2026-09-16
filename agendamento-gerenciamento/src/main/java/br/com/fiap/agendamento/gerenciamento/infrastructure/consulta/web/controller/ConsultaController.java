@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("consulta")
+@RequestMapping("consultas")
 @AllArgsConstructor
 public class ConsultaController {
 
@@ -39,34 +39,30 @@ public class ConsultaController {
 
     @PostMapping("{uuid}/cancelar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ConsultaResponse cancelarConsulta(@PathVariable UUID uuid) {
+    public void cancelarConsulta(@PathVariable UUID uuid) {
         UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
-        Consulta consulta = cadastroConsulta.cancelarConsulta(uuid, usuarioAutenticado);
-        return mapper.paraResponse(consulta);
+        cadastroConsulta.cancelarConsulta(uuid, usuarioAutenticado);
     }
 
     @PostMapping("{uuid}/confirmar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ConsultaResponse confirmarConsulta(@PathVariable UUID uuid) {
+    public void confirmarConsulta(@PathVariable UUID uuid) {
         UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
-        Consulta consulta = cadastroConsulta.confirmarConsulta(uuid, usuarioAutenticado);
-        return mapper.paraResponse(consulta);
+        cadastroConsulta.confirmarConsulta(uuid, usuarioAutenticado);
     }
 
     @PostMapping("{uuid}/realizar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ConsultaResponse realizarConsulta(@PathVariable UUID uuid) {
+    public void realizarConsulta(@PathVariable UUID uuid) {
         UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
-        Consulta consulta = cadastroConsulta.realizarConsulta(uuid, usuarioAutenticado);
-        return mapper.paraResponse(consulta);
+        cadastroConsulta.realizarConsulta(uuid, usuarioAutenticado);
     }
 
     @PostMapping("{uuid}/ausentar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ConsultaResponse marcarComoAusente(@PathVariable UUID uuid) {
+    public void marcarComoAusente(@PathVariable UUID uuid) {
         UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
-        Consulta consulta = cadastroConsulta.marcarComoAusente(uuid, usuarioAutenticado);
-        return mapper.paraResponse(consulta);
+        cadastroConsulta.marcarComoAusente(uuid, usuarioAutenticado);
     }
 
     @GetMapping
@@ -79,7 +75,7 @@ public class ConsultaController {
 
     @GetMapping("{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public ConsultaResponse consulta(@RequestParam UUID uuid) {
+    public ConsultaResponse consulta(@PathVariable UUID uuid) {
         UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
         ConsultaDTO consulta = gestaoConsulta.buscarPorId(uuid, usuarioAutenticado);
         return mapper.paraResponse(consulta);
@@ -87,7 +83,7 @@ public class ConsultaController {
 
     @GetMapping("pacientes/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public List<ConsultaResponse> consultaPorPaciente(@RequestParam UUID uuid) {
+    public List<ConsultaResponse> consultaPorPaciente(@PathVariable UUID uuid) {
         UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
         List<ConsultaDTO> consultas = gestaoConsulta.listarConsultasPorPaciente(uuid, usuarioAutenticado);
         return consultas.stream().map(mapper::paraResponse).toList();
@@ -95,7 +91,7 @@ public class ConsultaController {
 
     @GetMapping("medicos/{uuid}")
     @ResponseStatus(HttpStatus.OK)
-    public List<ConsultaResponse> consultaPorMedico(@RequestParam UUID uuid) {
+    public List<ConsultaResponse> consultaPorMedico(@PathVariable UUID uuid) {
         UsuarioAutenticado usuarioAutenticado = contextProvider.obterUsuarioAutenticado();
         List<ConsultaDTO> consultas = gestaoConsulta.listarConsultasMedico(uuid, usuarioAutenticado);
         return consultas.stream().map(mapper::paraResponse).toList();

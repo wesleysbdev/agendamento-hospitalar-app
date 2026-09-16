@@ -1,17 +1,21 @@
 package br.com.fiap.agendamento.gerenciamento.infrastructure.hospital.persistence.mapper;
 
 import br.com.fiap.agendamento.gerenciamento.domain.hospital.entity.Hospital;
+import br.com.fiap.agendamento.gerenciamento.infrastructure.config.mapper.DurationMapper;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.config.mapper.ValueObjectMapper;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.hospital.persistence.model.HospitalModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import java.time.Duration;
-
-@Mapper(componentModel = "spring", uses = ValueObjectMapper.class)
+@Mapper(
+        componentModel = "spring",
+        uses = {
+                ValueObjectMapper.class,
+                DurationMapper.class
+        }
+)
 public interface HospitalModelMapper {
-
 
     @Mapping(
             target = "tempoLimiteCancelamento",
@@ -28,31 +32,34 @@ public interface HospitalModelMapper {
     Hospital paraEntidade(HospitalModel model);
 
     @Mapping(
-            source = "tempoLimiteCancelamento",
-            target = "tempoLimiteCancelamentoMinutos"
+            target = "tempoLimiteCancelamentoMinutos",
+            source = "tempoLimiteCancelamento"
     )
     @Mapping(
-            source = "tempoToleranciaPosConsulta",
-            target = "tempoToleranciaPosConsultaMinutos"
+            target = "tempoToleranciaPosConsultaMinutos",
+            source = "tempoToleranciaPosConsulta"
     )
     @Mapping(
-            source = "tempoMinimoConsulta",
-            target = "tempoMinimoConsultaMinutos"
+            target = "tempoMinimoConsultaMinutos",
+            source = "tempoMinimoConsulta"
     )
     HospitalModel paraModelo(Hospital entidade);
 
     @Mapping(target = "id", ignore = true)
-    void atualizarModelo(Hospital hospital, @MappingTarget HospitalModel existente);
-
-    default Duration paraDuration(Integer minutos) {
-        return minutos == null
-                ? null
-                : Duration.ofMinutes(minutos);
-    }
-
-    default Integer paraMinutos(Duration duration) {
-        return duration == null
-                ? null
-                : Math.toIntExact(duration.toMinutes());
-    }
+    @Mapping(
+            target = "tempoLimiteCancelamentoMinutos",
+            source = "tempoLimiteCancelamento"
+    )
+    @Mapping(
+            target = "tempoToleranciaPosConsultaMinutos",
+            source = "tempoToleranciaPosConsulta"
+    )
+    @Mapping(
+            target = "tempoMinimoConsultaMinutos",
+            source = "tempoMinimoConsulta"
+    )
+    void atualizarModelo(
+            Hospital hospital,
+            @MappingTarget HospitalModel existente
+    );
 }
