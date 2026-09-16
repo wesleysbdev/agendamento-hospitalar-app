@@ -1,6 +1,5 @@
 package br.com.fiap.agendamento.historico.application.consulta.usecases;
 
-import br.com.fiap.agendamento.historico.application.consulta.ports.in.BuscarHistoricoPacienteUseCase;
 import br.com.fiap.agendamento.historico.domain.consulta.entity.ConsultaHistorico;
 import br.com.fiap.agendamento.historico.domain.consulta.enums.StatusConsulta;
 import br.com.fiap.agendamento.historico.domain.consulta.ports.out.ConsultaHistoricoRepositoryPort;
