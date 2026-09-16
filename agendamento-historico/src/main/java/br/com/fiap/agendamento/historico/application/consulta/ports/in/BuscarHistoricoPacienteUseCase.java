@@ -7,5 +7,5 @@ import java.util.UUID;
 
 public interface BuscarHistoricoPacienteUseCase {
 
-    List<ConsultaHistorico> buscarHistoricoPorPaciente(UUID pacienteId);
+    List<ConsultaHistorico> buscarHistoricoPaciente(UUID pacienteId, UUID authenticatedUserId, String role);
 }
