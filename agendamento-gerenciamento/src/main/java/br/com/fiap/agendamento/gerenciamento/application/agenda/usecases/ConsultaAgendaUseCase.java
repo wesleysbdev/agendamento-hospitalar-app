@@ -8,8 +8,11 @@ import br.com.fiap.agendamento.gerenciamento.application.dto.UsuarioAutenticado;
 import br.com.fiap.agendamento.gerenciamento.domain.agenda.entity.Agenda;
 import br.com.fiap.agendamento.gerenciamento.domain.agenda.entity.HorarioAgenda;
 import br.com.fiap.agendamento.gerenciamento.domain.agenda.exception.AgendaNaoEncontradaException;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.enums.TipoUsuario;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioNaoAutorizadoException;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class ConsultaAgendaUseCase implements GestaoConsultaAgenda {
@@ -22,24 +25,28 @@ public class ConsultaAgendaUseCase implements GestaoConsultaAgenda {
 
     @Override
     public List<AgendaDTO> listarAgendas(UsuarioAutenticado usuarioAutenticado) {
+        verificaPermissao(usuarioAutenticado.tipo(), Set.of(TipoUsuario.ADMINISTRADOR, TipoUsuario.ENFERMEIRO, TipoUsuario.MEDICO, TipoUsuario.PACIENTE));
         List<Agenda> agendas = agendaRepository.listar();
         return agendas.stream().map(this::converterParaDTO).toList();
     }
 
     @Override
     public AgendaDTO buscarAgendaPorUuid(UUID uuid, UsuarioAutenticado usuarioAutenticado) {
+        verificaPermissao(usuarioAutenticado.tipo(), Set.of(TipoUsuario.ADMINISTRADOR, TipoUsuario.ENFERMEIRO, TipoUsuario.MEDICO, TipoUsuario.PACIENTE));
         Agenda agenda = buscarPorUuid(uuid);
         return converterParaDTO(agenda);
     }
 
     @Override
     public List<AgendaDTO> buscarAgendasPorMedico(UUID medicoUuid, UsuarioAutenticado usuarioAutenticado) {
+        verificaPermissao(usuarioAutenticado.tipo(), Set.of(TipoUsuario.ADMINISTRADOR, TipoUsuario.ENFERMEIRO, TipoUsuario.MEDICO, TipoUsuario.PACIENTE));
         List<Agenda> agendas = agendaRepository.buscarPorMedico(medicoUuid);
         return agendas.stream().map(this::converterParaDTO).toList();
     }
 
     @Override
     public List<AgendaDTO> buscarAgendasPorHospital(UUID hospitalUuid, UsuarioAutenticado usuarioAutenticado) {
+        verificaPermissao(usuarioAutenticado.tipo(), Set.of(TipoUsuario.ADMINISTRADOR, TipoUsuario.ENFERMEIRO, TipoUsuario.MEDICO, TipoUsuario.PACIENTE));
         List<Agenda> agendas = agendaRepository.buscarPorHospital(hospitalUuid);
         return agendas.stream().map(this::converterParaDTO).toList();
     }
@@ -68,5 +75,11 @@ public class ConsultaAgendaUseCase implements GestaoConsultaAgenda {
     private Agenda buscarPorUuid(UUID uuid) {
         return agendaRepository.buscarPorId(uuid)
                 .orElseThrow(() -> new AgendaNaoEncontradaException("Agenda não encontrada."));
+    }
+
+    public static void verificaPermissao(TipoUsuario tipoUsuario, Set<TipoUsuario> tiposPermitidos) {
+        if (!tiposPermitidos.contains(tipoUsuario)) {
+            throw new UsuarioNaoAutorizadoException();
+        }
     }
 }

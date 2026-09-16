@@ -19,9 +19,10 @@ import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Medico;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Paciente;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Usuario;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.enums.TipoUsuario;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioNaoAutorizadoException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 public class CadastroConsultaUseCase implements GestaoCadastroConsulta {
@@ -49,9 +50,13 @@ public class CadastroConsultaUseCase implements GestaoCadastroConsulta {
         }
     }
 
-    private static void validarMedico(Medico medico) {
+    private static void validarMedico(Medico medico, UsuarioAutenticado usuarioAutenticado) {
         if (!medico.isAtivo() || medico.isExcluido()) {
             throw new ConsultaDadosInvalidosException("Médico não pode realizar atendimentos.");
+        }
+
+        if (usuarioAutenticado.tipo() == TipoUsuario.MEDICO && !usuarioAutenticado.uuid().equals(medico.getId())) {
+            throw new UsuarioNaoAutorizadoException();
         }
     }
 
@@ -61,12 +66,19 @@ public class CadastroConsultaUseCase implements GestaoCadastroConsulta {
         }
 
         if (usuarioAutenticado.tipo() == TipoUsuario.PACIENTE && !usuarioAutenticado.uuid().equals(paciente.getId())) {
-            throw new ConsultaDadosInvalidosException("Um paciente só pode agendar consultas para si mesmo.");
+            throw new UsuarioNaoAutorizadoException();
+        }
+    }
+
+    public static void verificaPermissao(TipoUsuario tipoUsuario, Set<TipoUsuario> tiposPermitidos) {
+        if (!tiposPermitidos.contains(tipoUsuario)) {
+            throw new UsuarioNaoAutorizadoException();
         }
     }
 
     @Override
     public Consulta cadastrarConsulta(ConsultaCadastroDTO consultaCadastroDTO, UsuarioAutenticado usuarioAutenticado) {
+        verificaPermissao(usuarioAutenticado.tipo(), Set.of(TipoUsuario.ADMINISTRADOR, TipoUsuario.ENFERMEIRO, TipoUsuario.MEDICO, TipoUsuario.PACIENTE));
         Agenda agenda = buscarAgendaPorId(consultaCadastroDTO.agendaId());
         Paciente paciente = buscarPacientePorId(consultaCadastroDTO.pacienteId());
 
@@ -75,7 +87,7 @@ public class CadastroConsultaUseCase implements GestaoCadastroConsulta {
                 .findFirst().orElseThrow(() -> new ConsultaDadosInvalidosException("Horário não encontrado para a agendamento."));
 
         validarPaciente(paciente, usuarioAutenticado);
-        validarAgendamento(agenda, consultaCadastroDTO, horario);
+        validarAgendamento(agenda, consultaCadastroDTO, horario, usuarioAutenticado);
 
         Consulta consulta = repository.salvar(new Consulta(UUID.randomUUID(), paciente, agenda, consultaCadastroDTO.data(), horario.getHorario()));
 
@@ -93,74 +105,56 @@ public class CadastroConsultaUseCase implements GestaoCadastroConsulta {
 
     @Override
     public Consulta cancelarConsulta(UUID consultaId, UsuarioAutenticado usuarioAutenticado) {
+        verificaPermissao(usuarioAutenticado.tipo(), Set.of(TipoUsuario.ADMINISTRADOR, TipoUsuario.ENFERMEIRO, TipoUsuario.MEDICO, TipoUsuario.PACIENTE));
         Consulta consulta = buscarPorId(consultaId);
+
+        validarPaciente(consulta.getPaciente(), usuarioAutenticado);
+        validarMedico(consulta.getAgenda().getMedico(), usuarioAutenticado);
+
         consulta.cancelar();
-        Consulta salvo = repository.salvar(consulta);
-        publicarNotificacao(
-                new ConsultaEvent(
-                        ConsultaEventType.CONSULTA_ATUALIZADA,
-                        consulta.getId(),
-                        consulta.getPaciente().getId(),
-                        consulta.getData().atTime(consulta.getHorario())
-                )
-        );
-        return salvo;
+        return salvarConsultaAtualizada(consulta);
     }
 
     @Override
     public Consulta realizarConsulta(UUID consultaId, UsuarioAutenticado usuarioAutenticado) {
+        verificaPermissao(usuarioAutenticado.tipo(), Set.of(TipoUsuario.ADMINISTRADOR, TipoUsuario.MEDICO));
         Consulta consulta = buscarPorId(consultaId);
+
+        validarMedico(consulta.getAgenda().getMedico(), usuarioAutenticado);
+
         consulta.realizar();
-        Consulta salvo = repository.salvar(consulta);
-        publicarNotificacao(
-                new ConsultaEvent(
-                        ConsultaEventType.CONSULTA_ATUALIZADA,
-                        consulta.getId(),
-                        consulta.getPaciente().getId(),
-                        consulta.getData().atTime(consulta.getHorario())
-                )
-        );
-        return salvo;
+        return salvarConsultaAtualizada(consulta);
     }
 
     @Override
     public Consulta confirmarConsulta(UUID consultaId, UsuarioAutenticado usuarioAutenticado) {
+        verificaPermissao(usuarioAutenticado.tipo(), Set.of(TipoUsuario.ADMINISTRADOR, TipoUsuario.ENFERMEIRO, TipoUsuario.PACIENTE));
         Consulta consulta = buscarPorId(consultaId);
+
+        validarPaciente(consulta.getPaciente(), usuarioAutenticado);
+
         consulta.confirmar();
         Consulta salvo = repository.salvar(consulta);
-        publicarNotificacao(
-                new ConsultaEvent(
-                        ConsultaEventType.CONSULTA_ATUALIZADA,
-                        consulta.getId(),
-                        consulta.getPaciente().getId(),
-                        consulta.getData().atTime(consulta.getHorario())
-                )
-        );
-        return salvo;
+        return salvarConsultaAtualizada(consulta);
     }
 
     @Override
     public Consulta marcarComoAusente(UUID consultaId, UsuarioAutenticado usuarioAutenticado) {
+        verificaPermissao(usuarioAutenticado.tipo(), Set.of(TipoUsuario.ADMINISTRADOR, TipoUsuario.ENFERMEIRO, TipoUsuario.MEDICO));
         Consulta consulta = buscarPorId(consultaId);
+
+        validarMedico(consulta.getAgenda().getMedico(), usuarioAutenticado);
+
         consulta.marcarComoAusente();
-        Consulta salvo = repository.salvar(consulta);
-        publicarNotificacao(
-                new ConsultaEvent(
-                        ConsultaEventType.CONSULTA_ATUALIZADA,
-                        consulta.getId(),
-                        consulta.getPaciente().getId(),
-                        consulta.getData().atTime(consulta.getHorario())
-                )
-        );
-        return salvo;
+        return salvarConsultaAtualizada(consulta);
     }
 
-    private void validarAgendamento(Agenda agenda, ConsultaCadastroDTO consulta, HorarioAgenda horario) {
+    private void validarAgendamento(Agenda agenda, ConsultaCadastroDTO consulta, HorarioAgenda horario, UsuarioAutenticado usuarioAutenticado) {
         if (consulta.data().isBefore(LocalDate.now())) {
             throw new ConsultaDadosInvalidosException("A data da consulta não pode estar no passado.");
         }
 
-        validarMedico(agenda.getMedico());
+        validarMedico(agenda.getMedico(), usuarioAutenticado);
         validarHospital(agenda.getHospital());
 
         if (!agenda.possuiHorario(consulta.data().getDayOfWeek(), horario.getHorario())) {
@@ -173,8 +167,19 @@ public class CadastroConsultaUseCase implements GestaoCadastroConsulta {
 
     }
 
-    private void publicarNotificacao(ConsultaEvent consultaEvent) {
-        consultaEventPublisher.publicarAtualizacao(consultaEvent);
+    private Consulta salvarConsultaAtualizada(Consulta consulta) {
+        Consulta salvo = repository.salvar(consulta);
+
+        consultaEventPublisher.publicarAtualizacao(
+                new ConsultaEvent(
+                        ConsultaEventType.CONSULTA_ATUALIZADA,
+                        consulta.getId(),
+                        consulta.getPaciente().getId(),
+                        consulta.getData().atTime(consulta.getHorario())
+                )
+        );
+
+        return salvo;
     }
 
     private Consulta buscarPorId(UUID consultaId) {
