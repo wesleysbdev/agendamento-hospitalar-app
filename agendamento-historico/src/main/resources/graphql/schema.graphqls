@@ -1,38 +1,43 @@
-type Query {
-    historicoPaciente(pacienteUuid: ID!): [HistoricoConsulta!]!
-    consultasFuturas(pacienteUuid: ID!): [HistoricoConsulta!]!
-}
-
-type HistoricoConsulta {
-    consultaUuid: ID!
+type Consulta {
+    id: ID!
+    paciente: Paciente!
+    medico: Medico!
+    hospital: Hospital!
+    data: String!
     horario: String!
-    estado: EstadoConsulta!
-    paciente: PacienteInfo!
-    medico: MedicoInfo!
-    hospital: HospitalInfo!
+    status: StatusConsulta!
+    criadoEm: String!
 }
 
-type PacienteInfo {
-    uuid: ID!
+type Paciente {
+    id: ID!
+    nome: String!
+    email: String!
+    telefone: String
+}
+
+type Medico {
+    id: ID!
+    nome: String!
+    email: String!
+}
+
+type Hospital {
+    id: ID!
     nome: String!
 }
 
-type MedicoInfo {
-    uuid: ID!
-    nome: String!
-    crm: String!
-}
-
-type HospitalInfo {
-    uuid: ID!
-    nome: String!
-    endereco: String!
-}
-
-enum EstadoConsulta {
+enum StatusConsulta {
     AGENDADA
     CONFIRMADA
     CANCELADA
     AUSENTE
     REALIZADA
+}
+
+type Query {
+    historicoPorPaciente(pacienteId: ID!): [Consulta]
+    consultasFuturasPorPaciente(pacienteId: ID!): [Consulta]
+    consultasPassadasPorPaciente(pacienteId: ID!): [Consulta]
+    consultaPorId(id: ID!): Consulta
 }
