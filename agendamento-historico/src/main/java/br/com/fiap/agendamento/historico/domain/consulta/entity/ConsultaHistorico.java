@@ -1,6 +1,9 @@
 package br.com.fiap.agendamento.historico.domain.consulta.entity;
 
 import br.com.fiap.agendamento.historico.domain.consulta.enums.StatusConsulta;
+import br.com.fiap.agendamento.historico.domain.hospital.entity.HospitalHistorico;
+import br.com.fiap.agendamento.historico.domain.usuario.entity.MedicoHistorico;
+import br.com.fiap.agendamento.historico.domain.usuario.entity.PacienteHistorico;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

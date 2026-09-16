@@ -5,12 +5,15 @@ import br.com.fiap.agendamento.historico.application.consulta.ports.in.BuscarCon
 import br.com.fiap.agendamento.historico.application.consulta.ports.in.BuscarConsultasPassadasUseCase;
 import br.com.fiap.agendamento.historico.application.consulta.ports.in.BuscarHistoricoPacienteUseCase;
 import br.com.fiap.agendamento.historico.domain.consulta.entity.ConsultaHistorico;
+import br.com.fiap.agendamento.historico.domain.consulta.exception.AcessoNaoAutorizadoException;
 import br.com.fiap.agendamento.historico.infrastructure.graphql.dto.ConsultaGraphQLDTO;
 import br.com.fiap.agendamento.historico.infrastructure.graphql.mapper.ConsultaGraphQLMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -27,10 +30,20 @@ public class ConsultaHistoricoResolver {
     private final BuscarConsultaPorIdUseCase buscarConsultaPorIdUseCase;
     private final ConsultaGraphQLMapper mapper;
 
+    private void verificarAutorizacaoPaciente(Authentication authentication, UUID pacienteIdSolicitado) {
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_PACIENTE"))) {
+            UUID usuarioId = UUID.fromString(authentication.getName());
+            if (!usuarioId.equals(pacienteIdSolicitado)) {
+                throw new AcessoNaoAutorizadoException("Paciente só pode consultar suas próprias informações");
+            }
+        }
+    }
+
     @QueryMapping
     @PreAuthorize("hasAnyRole('MEDICO', 'ENFERMEIRO', 'PACIENTE')")
-    public List<ConsultaGraphQLDTO> historicoPorPaciente(@Argument String pacienteId) {
+    public List<ConsultaGraphQLDTO> historicoPorPaciente(@Argument String pacienteId, Authentication authentication) {
         UUID id = UUID.fromString(pacienteId);
+        verificarAutorizacaoPaciente(authentication, id);
         List<ConsultaHistorico> consultas = buscarHistoricoPacienteUseCase.buscarHistoricoPorPaciente(id);
         return consultas.stream()
                 .map(mapper::toDTO)
@@ -39,8 +52,9 @@ public class ConsultaHistoricoResolver {
 
     @QueryMapping
     @PreAuthorize("hasAnyRole('MEDICO', 'ENFERMEIRO', 'PACIENTE')")
-    public List<ConsultaGraphQLDTO> consultasFuturasPorPaciente(@Argument String pacienteId) {
+    public List<ConsultaGraphQLDTO> consultasFuturasPorPaciente(@Argument String pacienteId, Authentication authentication) {
         UUID id = UUID.fromString(pacienteId);
+        verificarAutorizacaoPaciente(authentication, id);
         List<ConsultaHistorico> consultas = buscarConsultasFuturasUseCase.buscarConsultasFuturasPorPaciente(id);
         return consultas.stream()
                 .map(mapper::toDTO)
@@ -49,8 +63,9 @@ public class ConsultaHistoricoResolver {
 
     @QueryMapping
     @PreAuthorize("hasAnyRole('MEDICO', 'ENFERMEIRO', 'PACIENTE')")
-    public List<ConsultaGraphQLDTO> consultasPassadasPorPaciente(@Argument String pacienteId) {
+    public List<ConsultaGraphQLDTO> consultasPassadasPorPaciente(@Argument String pacienteId, Authentication authentication) {
         UUID id = UUID.fromString(pacienteId);
+        verificarAutorizacaoPaciente(authentication, id);
         List<ConsultaHistorico> consultas = buscarConsultasPassadasUseCase.buscarConsultasPassadasPorPaciente(id);
         return consultas.stream()
                 .map(mapper::toDTO)
@@ -59,10 +74,18 @@ public class ConsultaHistoricoResolver {
 
     @QueryMapping
     @PreAuthorize("hasAnyRole('MEDICO', 'ENFERMEIRO', 'PACIENTE')")
-    public ConsultaGraphQLDTO consultaPorId(@Argument String id) {
+    public ConsultaGraphQLDTO consultaPorId(@Argument String id, Authentication authentication) {
         UUID consultaId = UUID.fromString(id);
-        return buscarConsultaPorIdUseCase.buscarPorId(consultaId)
-                .map(mapper::toDTO)
+        ConsultaHistorico consulta = buscarConsultaPorIdUseCase.buscarPorId(consultaId)
                 .orElse(null);
+        
+        if (consulta != null && authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_PACIENTE"))) {
+            UUID usuarioId = UUID.fromString(authentication.getName());
+            if (!usuarioId.equals(consulta.getPaciente().getId())) {
+                throw new AcessoNaoAutorizadoException("Paciente só pode consultar suas próprias consultas");
+            }
+        }
+        
+        return consulta != null ? mapper.toDTO(consulta) : null;
     }
 }
