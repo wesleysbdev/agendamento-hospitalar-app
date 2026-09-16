@@ -15,9 +15,12 @@ import br.com.fiap.agendamento.gerenciamento.domain.agenda.exception.HorarioAgen
 import br.com.fiap.agendamento.gerenciamento.domain.hospital.entity.Hospital;
 import br.com.fiap.agendamento.gerenciamento.domain.hospital.exception.HospitalNaoEncontradoException;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Medico;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.enums.TipoUsuario;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioNaoAutorizadoException;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioNaoEncontradoException;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
@@ -38,6 +41,7 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
 
     @Override
     public Agenda cadastrar(AgendaCadastroDTO agendaCadastro, UsuarioAutenticado usuarioAutenticado) {
+        verificaPermissao(usuarioAutenticado.tipo(), Set.of(TipoUsuario.MEDICO));
         Medico medico = buscarMedico(usuarioAutenticado.uuid());
 
         if (!medico.isAtivo() || medico.isExcluido()) {
@@ -64,6 +68,7 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
 
     @Override
     public Agenda adicionarHorarios(UUID agendaUuid, List<HorarioAgendaCadastroDTO> horarios, UsuarioAutenticado usuarioAutenticado) {
+        verificaPermissao(usuarioAutenticado.tipo(), Set.of(TipoUsuario.ADMINISTRADOR, TipoUsuario.MEDICO));
         Agenda agenda = buscarAgendaPorUuid(agendaUuid);
         List<HorarioAgenda> novosHorarios = horarios.stream().map(this::criarHorario).toList();
         agenda.adicionarHorarios(novosHorarios);
@@ -72,6 +77,7 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
 
     @Override
     public Agenda removerHorario(UUID agendaUuid, UUID horarioUuid, UsuarioAutenticado usuarioAutenticado) {
+        verificaPermissao(usuarioAutenticado.tipo(), Set.of(TipoUsuario.ADMINISTRADOR, TipoUsuario.MEDICO));
         Agenda agenda = buscarAgendaPorUuid(agendaUuid);
         HorarioAgenda horarioAgenda = buscarHorarioNaAgenda(agenda.getHorarios(), horarioUuid);
         agenda.removerHorario(horarioAgenda);
@@ -120,5 +126,11 @@ public class CadastroAgendaUseCase implements GestaoCadastroAgenda {
         return horariosDaAgenda.stream()
                 .filter(obj -> uuidBuscado.equals(obj.getId()))
                 .findFirst().orElseThrow(() -> new HorarioAgendaNaoEncontradoException());
+    }
+
+    public static void verificaPermissao(TipoUsuario tipoUsuario, Set<TipoUsuario> tiposPermitidos) {
+        if (!tiposPermitidos.contains(tipoUsuario)) {
+            throw new UsuarioNaoAutorizadoException();
+        }
     }
 }

@@ -14,24 +14,3 @@ public record AgendaRequest(
         List<@Valid HorarioAgendaRequest> horarios
 ) {
 }
-
-
-//mock
-//
-//{
-//        "hospitalId": "UUID_DO_HOSPITAL",
-//        "horarios": [
-//        {
-//                "diaSemana": "MONDAY",
-//                "horario": "08:00"
-//        },
-//        {
-//                "diaSemana": "MONDAY",
-//                "horario": "09:00"
-//        },
-//        {
-//                "diaSemana": "WEDNESDAY",
-//                "horario": "14:00"
-//        }
-//  ]
-//}
