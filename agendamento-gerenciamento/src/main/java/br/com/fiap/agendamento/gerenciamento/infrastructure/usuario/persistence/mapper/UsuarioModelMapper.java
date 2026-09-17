@@ -1,42 +1,14 @@
 package br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.persistence.mapper;
 
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.*;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Crm;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Email;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Telefone;
+import br.com.fiap.agendamento.gerenciamento.infrastructure.config.mapper.ValueObjectMapper;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.persistence.model.*;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import java.util.List;
-import java.util.Optional;
-
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = ValueObjectMapper.class)
 public interface UsuarioModelMapper {
-
-    default Email paraEmail(String valor) {
-        return valor == null ? null : new Email(valor);
-    }
-
-    default String paraString(Email email) {
-        return email == null ? null : email.valor();
-    }
-
-    default Telefone paraTelefone(String valor) {
-        return valor == null ? null : new Telefone(valor);
-    }
-
-    default String paraString(Telefone telefone) {
-        return telefone == null ? null : telefone.valor();
-    }
-
-    default Crm paraCrm(String valor) {
-        return valor == null ? null : Crm.criarDeTextoCompleto(valor);
-    }
-
-    default String paraString(Crm crm) {
-        return crm == null ? null : crm.toString();
-    }
 
     default Usuario paraEntidade(UsuarioModel model) {
         return switch (model) {
@@ -73,5 +45,6 @@ public interface UsuarioModelMapper {
 
     PacienteModel paraModelo(Paciente entidade);
 
+    @Mapping(target = "id", ignore = true)
     void atualizarModelo(Usuario usuario, @MappingTarget UsuarioModel existente);
 }

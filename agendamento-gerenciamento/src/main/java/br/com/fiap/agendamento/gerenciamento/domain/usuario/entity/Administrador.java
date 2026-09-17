@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public final class Administrador extends Usuario {
 
-    public Administrador(UUID uuid, String nome, Email email, String senha, boolean ativo, boolean excluido) {
-        super(uuid, nome, email, senha, ativo, excluido);
+    public Administrador(UUID id, String nome, Email email, String senha, boolean ativo, boolean excluido) {
+        super(id, nome, email, senha, ativo, excluido);
     }
 
     @Override

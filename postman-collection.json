@@ -1,0 +1,1358 @@
+{
+  "info": {
+    "name": "Agendamento Hospitalar API",
+    "description": "Collection completa para testar todos os endpoints da aplicação de agendamento hospitalar",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "graphqlUrl",
+      "value": "http://localhost:8080/api/v1/graphql",
+      "type": "string"
+    },
+    {
+      "key": "tokenAdmin",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tokenMedico",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tokenPaciente",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tokenEnfermeiro",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "medicoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "pacienteId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "enfermeiroId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "hospitalId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "agendaId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "horarioId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "consultaId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Autenticação",
+      "item": [
+        {
+          "name": "Login - Administrador",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@hospital.com\",\n  \"senha\": \"paciente\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/autenticacao",
+              "host": ["{{baseUrl}}"],
+              "path": ["autenticacao"]
+            },
+            "description": "Autentica um administrador e retorna o token JWT"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"tokenAdmin\", jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - Médico",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"medico@hospital.com\",\n  \"senha\": \"Medico@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/autenticacao",
+              "host": ["{{baseUrl}}"],
+              "path": ["autenticacao"]
+            },
+            "description": "Autentica um médico e retorna o token JWT"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"tokenMedico\", jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - Paciente",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"paciente@email.com\",\n  \"senha\": \"Paciente@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/autenticacao",
+              "host": ["{{baseUrl}}"],
+              "path": ["autenticacao"]
+            },
+            "description": "Autentica um paciente e retorna o token JWT"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"tokenPaciente\", jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - Enfermeiro",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"enfermeiro@hospital.com\",\n  \"senha\": \"Enfermeiro@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/autenticacao",
+              "host": ["{{baseUrl}}"],
+              "path": ["autenticacao"]
+            },
+            "description": "Autentica um enfermeiro e retorna o token JWT"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"tokenEnfermeiro\", jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Usuários - Cadastro",
+      "item": [
+        {
+          "name": "Cadastrar Paciente (Público)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"paciente@email.com\",\n  \"senha\": \"Paciente@123\",\n  \"telefone\": \"11987654321\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/pacientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "pacientes"]
+            },
+            "description": "Cadastra um novo paciente (endpoint público)"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"pacienteId\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cadastrar Médico (Requer Auth)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Dr. Carlos Alberto\",\n  \"email\": \"medico@hospital.com\",\n  \"senha\": \"Medico@123\",\n  \"crm\": \"SP123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/medicos",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "medicos"]
+            },
+            "description": "Cadastra um novo médico (requer autenticação de admin)"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"medicoId\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cadastrar Administrador (Requer Auth)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Admin Principal\",\n  \"email\": \"admin@hospital.com\",\n  \"senha\": \"Admin@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/administradores",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "administradores"]
+            },
+            "description": "Cadastra um novo administrador (requer autenticação)"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"adminId\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cadastrar Enfermeiro (Requer Auth)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Enfermeira Maria Santos\",\n  \"email\": \"enfermeiro@hospital.com\",\n  \"senha\": \"Enfermeiro@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/enfermeiros",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "enfermeiros"]
+            },
+            "description": "Cadastra um novo enfermeiro (requer autenticação)"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"enfermeiroId\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Usuários - Consulta",
+      "item": [
+        {
+          "name": "Listar Todos os Usuários",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios"]
+            },
+            "description": "Lista todos os usuários do sistema (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Usuário por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/{{pacienteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "{{pacienteId}}"]
+            },
+            "description": "Busca um usuário específico por ID (requer autenticação)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Usuários - Edição",
+      "item": [
+        {
+          "name": "Editar Paciente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPaciente}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva Atualizado\",\n  \"telefone\": \"11987654322\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/pacientes/{{pacienteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "pacientes", "{{pacienteId}}"]
+            },
+            "description": "Edita dados de um paciente (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Médico",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Dr. Carlos Alberto Jr.\",\n  \"crm\": \"SP123457\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/medicos/{{medicoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "medicos", "{{medicoId}}"]
+            },
+            "description": "Edita dados de um médico (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Administrador",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Admin Principal Atualizado\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/administrador/{{adminId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "administrador", "{{adminId}}"]
+            },
+            "description": "Edita dados de um administrador (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Enfermeiro",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Enfermeira Maria Santos Silva\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/enfermeiro/{{enfermeiroId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "enfermeiro", "{{enfermeiroId}}"]
+            },
+            "description": "Edita dados de um enfermeiro (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Alterar Senha",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPaciente}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"novaSenha\": \"NovaSenha@456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/{{pacienteId}}/senha",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "{{pacienteId}}", "senha"]
+            },
+            "description": "Altera a senha de um usuário (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Ativar Usuário",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/{{pacienteId}}/ativar",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "{{pacienteId}}", "ativar"]
+            },
+            "description": "Ativa um usuário (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Inativar Usuário",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/{{pacienteId}}/inativar",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "{{pacienteId}}", "inativar"]
+            },
+            "description": "Inativa um usuário (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Excluir Usuário",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/{{pacienteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "{{pacienteId}}"]
+            },
+            "description": "Exclui um usuário (requer autenticação)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Hospitais",
+      "item": [
+        {
+          "name": "Cadastrar Hospital",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Hospital São João\",\n  \"endereco\": \"Rua das Flores, 100\",\n  \"telefone\": \"11999999999\",\n  \"diaSemanaInicio\": \"MONDAY\",\n  \"diaSemanaFim\": \"FRIDAY\",\n  \"horaInicio\": \"08:00:00\",\n  \"horaFim\": \"18:00:00\",\n  \"tempoLimiteCancelamentoMinutos\": 120,\n  \"tempoToleranciaPosConsultaMinutos\": 15,\n  \"tempoMinimoConsultaMinutos\": 30\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/hospitais",
+              "host": ["{{baseUrl}}"],
+              "path": ["hospitais"]
+            },
+            "description": "Cadastra um novo hospital (requer autenticação)"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"hospitalId\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar Hospitais",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitais",
+              "host": ["{{baseUrl}}"],
+              "path": ["hospitais"]
+            },
+            "description": "Lista todos os hospitais (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Hospital por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitais/{{hospitalId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["hospitais", "{{hospitalId}}"]
+            },
+            "description": "Busca um hospital específico por ID (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Hospital",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Hospital São João Atualizado\",\n  \"endereco\": \"Rua das Flores, 200\",\n  \"telefone\": \"11999999998\",\n  \"diaSemanaInicio\": \"MONDAY\",\n  \"diaSemanaFim\": \"FRIDAY\",\n  \"horaInicio\": \"08:00:00\",\n  \"horaFim\": \"18:00:00\",\n  \"tempoLimiteCancelamentoMinutos\": 120,\n  \"tempoToleranciaPosConsultaMinutos\": 15,\n  \"tempoMinimoConsultaMinutos\": 30\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/hospitais/{{hospitalId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["hospitais", "{{hospitalId}}"]
+            },
+            "description": "Edita dados de um hospital (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Ativar Hospital",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitais/{{hospitalId}}/ativar",
+              "host": ["{{baseUrl}}"],
+              "path": ["hospitais", "{{hospitalId}}", "ativar"]
+            },
+            "description": "Ativa um hospital (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Inativar Hospital",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitais/{{hospitalId}}/inativar",
+              "host": ["{{baseUrl}}"],
+              "path": ["hospitais", "{{hospitalId}}", "inativar"]
+            },
+            "description": "Inativa um hospital (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Excluir Hospital",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/hospitais/{{hospitalId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["hospitais", "{{hospitalId}}"]
+            },
+            "description": "Exclui um hospital (requer autenticação)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Agendas",
+      "item": [
+        {
+          "name": "Cadastrar Agenda",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hospitalId\": \"{{hospitalId}}\",\n  \"horarios\": [\n    {\n      \"diaSemana\": \"MONDAY\",\n      \"horario\": \"09:00:00\"\n    },\n    {\n      \"diaSemana\": \"MONDAY\",\n      \"horario\": \"10:00:00\"\n    },\n    {\n      \"diaSemana\": \"TUESDAY\",\n      \"horario\": \"09:00:00\"\n    },\n    {\n      \"diaSemana\": \"TUESDAY\",\n      \"horario\": \"10:00:00\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/agendas",
+              "host": ["{{baseUrl}}"],
+              "path": ["agendas"]
+            },
+            "description": "Cadastra uma nova agenda para um médico (requer autenticação)"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"agendaId\", jsonData.id);",
+                  "if (jsonData.horarios && jsonData.horarios.length > 0) {",
+                  "  pm.collectionVariables.set(\"horarioId\", jsonData.horarios[0].id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar Agendas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/agendas",
+              "host": ["{{baseUrl}}"],
+              "path": ["agendas"]
+            },
+            "description": "Lista todas as agendas (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Agenda por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/agendas/{{agendaId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["agendas", "{{agendaId}}"]
+            },
+            "description": "Busca uma agenda específica por ID (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Agendas por Médico",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/agendas/medico/{{medicoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["agendas", "medico", "{{medicoId}}"]
+            },
+            "description": "Busca agendas de um médico específico (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Agendas por Hospital",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/agendas/hospital/{{hospitalId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["agendas", "hospital", "{{hospitalId}}"]
+            },
+            "description": "Busca agendas de um hospital específico (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Adicionar Horários à Agenda",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"horarios\": [\n    {\n      \"diaSemana\": \"WEDNESDAY\",\n      \"horario\": \"14:00:00\"\n    },\n    {\n      \"diaSemana\": \"WEDNESDAY\",\n      \"horario\": \"15:00:00\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/agendas/{{agendaId}}/horarios",
+              "host": ["{{baseUrl}}"],
+              "path": ["agendas", "{{agendaId}}", "horarios"]
+            },
+            "description": "Adiciona horários a uma agenda existente (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Remover Horário da Agenda",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/agendas/{{agendaId}}/horarios/{{horarioId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["agendas", "{{agendaId}}", "horarios", "{{horarioId}}"]
+            },
+            "description": "Remove um horário específico de uma agenda (requer autenticação)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7. Consultas",
+      "item": [
+        {
+          "name": "Agendar Consulta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPaciente}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"agendaId\": \"{{agendaId}}\",\n  \"pacienteId\": \"{{pacienteId}}\",\n  \"horarioId\": \"{{horarioId}}\",\n  \"data\": \"2026-09-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/consultas",
+              "host": ["{{baseUrl}}"],
+              "path": ["consultas"]
+            },
+            "description": "Agenda uma nova consulta (requer autenticação)"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"consultaId\", jsonData.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar Consultas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consultas",
+              "host": ["{{baseUrl}}"],
+              "path": ["consultas"]
+            },
+            "description": "Lista todas as consultas (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar Consulta por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consultas/{{consultaId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["consultas", "{{consultaId}}"]
+            },
+            "description": "Busca uma consulta específica por ID (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Consultas por Paciente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPaciente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consultas/pacientes/{{pacienteId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["consultas", "pacientes", "{{pacienteId}}"]
+            },
+            "description": "Lista consultas de um paciente específico (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Consultas por Médico",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenMedico}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consultas/medicos/{{medicoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["consultas", "medicos", "{{medicoId}}"]
+            },
+            "description": "Lista consultas de um médico específico (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Cancelar Consulta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPaciente}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consultas/{{consultaId}}/cancelar",
+              "host": ["{{baseUrl}}"],
+              "path": ["consultas", "{{consultaId}}", "cancelar"]
+            },
+            "description": "Cancela uma consulta (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar Consulta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenMedico}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consultas/{{consultaId}}/confirmar",
+              "host": ["{{baseUrl}}"],
+              "path": ["consultas", "{{consultaId}}", "confirmar"]
+            },
+            "description": "Confirma uma consulta (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Realizar Consulta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenMedico}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consultas/{{consultaId}}/realizar",
+              "host": ["{{baseUrl}}"],
+              "path": ["consultas", "{{consultaId}}", "realizar"]
+            },
+            "description": "Marca uma consulta como realizada (requer autenticação)"
+          },
+          "response": []
+        },
+        {
+          "name": "Marcar Consulta como Ausente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenMedico}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/consultas/{{consultaId}}/ausentar",
+              "host": ["{{baseUrl}}"],
+              "path": ["consultas", "{{consultaId}}", "ausentar"]
+            },
+            "description": "Marca uma consulta como paciente ausente (requer autenticação)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "8. GraphQL - Histórico de Consultas",
+      "item": [
+        {
+          "name": "Histórico Completo do Paciente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPaciente}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query HistoricoPaciente($pacienteId: ID!) {\\n    historicoPaciente(pacienteId: $pacienteId) {\\n      id\\n      pacienteId\\n      agendaId\\n      data\\n      horario\\n      status\\n      criadoEm\\n    }\\n  }\",\n  \"variables\": {\n    \"pacienteId\": \"{{pacienteId}}\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": ["{{graphqlUrl}}"]
+            },
+            "description": "Busca o histórico completo de consultas de um paciente (requer autenticação de Admin, Enfermeiro ou Paciente)"
+          },
+          "response": []
+        },
+        {
+          "name": "Consultas Futuras do Paciente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPaciente}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query ConsultasFuturas($pacienteId: ID!) {\\n    consultasFuturas(pacienteId: $pacienteId) {\\n      id\\n      pacienteId\\n      agendaId\\n      data\\n      horario\\n      status\\n      criadoEm\\n    }\\n  }\",\n  \"variables\": {\n    \"pacienteId\": \"{{pacienteId}}\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": ["{{graphqlUrl}}"]
+            },
+            "description": "Busca apenas as consultas futuras de um paciente (requer autenticação de Admin, Enfermeiro ou Paciente)"
+          },
+          "response": []
+        },
+        {
+          "name": "Histórico - Como Medico",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenMedico}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query HistoricoPaciente($pacienteId: ID!) {\\n    historicoPaciente(pacienteId: $pacienteId) {\\n      id\\n      pacienteId\\n      agendaId\\n      data\\n      horario\\n      status\\n      criadoEm\\n    }\\n  }\",\n  \"variables\": {\n    \"pacienteId\": \"{{pacienteId}}\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": ["{{graphqlUrl}}"]
+            },
+            "description": "Administrador buscando histórico de qualquer paciente"
+          },
+          "response": []
+        },
+        {
+          "name": "Histórico - Como Enfermeiro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenEnfermeiro}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query HistoricoPaciente($pacienteId: ID!) {\\n    historicoPaciente(pacienteId: $pacienteId) {\\n      id\\n      pacienteId\\n      agendaId\\n      data\\n      horario\\n      status\\n      criadoEm\\n    }\\n  }\",\n  \"variables\": {\n    \"pacienteId\": \"{{pacienteId}}\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": ["{{graphqlUrl}}"]
+            },
+            "description": "Enfermeiro buscando histórico de qualquer paciente"
+          },
+          "response": []
+        },
+        {
+          "name": "Consultas Futuras - Como Medico",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenMedico}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query ConsultasFuturas($pacienteId: ID!) {\\n    consultasFuturas(pacienteId: $pacienteId) {\\n      id\\n      pacienteId\\n      agendaId\\n      data\\n      horario\\n      status\\n      criadoEm\\n    }\\n  }\",\n  \"variables\": {\n    \"pacienteId\": \"{{pacienteId}}\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": ["{{graphqlUrl}}"]
+            },
+            "description": "Administrador buscando consultas futuras de qualquer paciente"
+          },
+          "response": []
+        },
+        {
+          "name": "Consultas Futuras - Como Enfermeiro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenEnfermeiro}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query ConsultasFuturas($pacienteId: ID!) {\\n    consultasFuturas(pacienteId: $pacienteId) {\\n      id\\n      pacienteId\\n      agendaId\\n      data\\n      horario\\n      status\\n      criadoEm\\n    }\\n  }\",\n  \"variables\": {\n    \"pacienteId\": \"{{pacienteId}}\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{graphqlUrl}}",
+              "host": ["{{graphqlUrl}}"]
+            },
+            "description": "Enfermeiro buscando consultas futuras de qualquer paciente"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

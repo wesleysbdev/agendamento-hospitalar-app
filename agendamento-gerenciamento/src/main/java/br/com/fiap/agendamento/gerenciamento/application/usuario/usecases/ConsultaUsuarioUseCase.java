@@ -1,10 +1,10 @@
 package br.com.fiap.agendamento.gerenciamento.application.usuario.usecases;
 
 import br.com.fiap.agendamento.gerenciamento.application.dto.UsuarioAutenticado;
-import br.com.fiap.agendamento.gerenciamento.application.usuario.validator.PermissaoValidator;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.dto.consulta.*;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.in.GestaoConsultaUsuario;
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.out.UsuarioRepository;
+import br.com.fiap.agendamento.gerenciamento.application.usuario.validator.PermissaoValidator;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.*;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.enums.TipoUsuario;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.exception.UsuarioNaoEncontradoException;
@@ -28,9 +28,9 @@ public class ConsultaUsuarioUseCase implements GestaoConsultaUsuario {
     }
 
     @Override
-    public UsuarioDTO buscarUsuarioPorUuid(UUID uuid, UsuarioAutenticado usuarioAutenticado) {
+    public UsuarioDTO buscarUsuarioPorId(UUID uuid, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.apenasOProprio(usuarioAutenticado, uuid);
-        Usuario usuario = buscarUsuarioPorUuid(uuid);
+        Usuario usuario = validarUsuarioPorId(uuid);
         return converterParaDTO(usuario);
     }
 
@@ -49,21 +49,21 @@ public class ConsultaUsuarioUseCase implements GestaoConsultaUsuario {
     private UsuarioDTO converterParaDTO(Usuario usuario) {
         return switch (usuario) {
             case Administrador adm -> new AdministradorDTO(
-                    adm.getUuid(),
+                    adm.getId(),
                     adm.getNome(),
                     adm.getEmail().valor(),
                     adm.isAtivo(),
                     adm.getTipo()
             );
             case Enfermeiro enfermeiro -> new EnfermeiroDTO(
-                    enfermeiro.getUuid(),
+                    enfermeiro.getId(),
                     enfermeiro.getNome(),
                     enfermeiro.getEmail().valor(),
                     enfermeiro.isAtivo(),
                     enfermeiro.getTipo()
             );
             case Medico med -> new MedicoDTO(
-                    med.getUuid(),
+                    med.getId(),
                     med.getNome(),
                     med.getEmail().valor(),
                     med.isAtivo(),
@@ -71,7 +71,7 @@ public class ConsultaUsuarioUseCase implements GestaoConsultaUsuario {
                     med.getCrm().toString()
             );
             case Paciente pac -> new PacienteDTO(
-                    pac.getUuid(),
+                    pac.getId(),
                     pac.getNome(),
                     pac.getEmail().valor(),
                     pac.isAtivo(),
@@ -81,7 +81,7 @@ public class ConsultaUsuarioUseCase implements GestaoConsultaUsuario {
         };
     }
 
-    private Usuario buscarUsuarioPorUuid(UUID uuid) {
-        return repository.buscarPorUuid(uuid).orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
+    private Usuario validarUsuarioPorId(UUID uuid) {
+        return repository.buscarPorId(uuid).orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
     }
 }

@@ -1,7 +1,7 @@
 package br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.persistence.adapter;
 
 import br.com.fiap.agendamento.gerenciamento.application.usuario.ports.out.UsuarioRepository;
-import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.*;
+import br.com.fiap.agendamento.gerenciamento.domain.usuario.entity.Usuario;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.enums.TipoUsuario;
 import br.com.fiap.agendamento.gerenciamento.domain.usuario.vo.Email;
 import br.com.fiap.agendamento.gerenciamento.infrastructure.usuario.persistence.mapper.UsuarioModelMapper;
@@ -27,8 +27,8 @@ public class UsuarioRepositoryAdapter implements UsuarioRepository {
     }
 
     @Override
-    public Optional<Usuario> buscarPorUuid(UUID uuid) {
-        return repository.findByUuid(uuid).map(mapper::paraEntidade);
+    public Optional<Usuario> buscarPorId(UUID uuid) {
+        return repository.findById(uuid).map(mapper::paraEntidade);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class UsuarioRepositoryAdapter implements UsuarioRepository {
 
     @Override
     public Usuario salvar(Usuario usuario) {
-        UsuarioModel model = repository.findByUuid(usuario.getUuid())
+        UsuarioModel model = repository.findById(usuario.getId())
                 .map(existente -> {
                     mapper.atualizarModelo(usuario, existente);
                     return existente;

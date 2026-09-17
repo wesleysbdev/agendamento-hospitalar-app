@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface GestaoConsultaUsuario {
     List<UsuarioDTO> listarUsuarios(UsuarioAutenticado usuarioAutenticado);
 
-    UsuarioDTO buscarUsuarioPorUuid(UUID uuid, UsuarioAutenticado usuarioAutenticado);
+    UsuarioDTO buscarUsuarioPorId(UUID uuid, UsuarioAutenticado usuarioAutenticado);
 
     List<UsuarioDTO> listarPorTipo(UsuarioAutenticado usuarioAutenticado, TipoUsuario tipo);
 }

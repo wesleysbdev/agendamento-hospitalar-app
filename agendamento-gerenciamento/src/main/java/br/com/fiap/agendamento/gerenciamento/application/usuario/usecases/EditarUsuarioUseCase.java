@@ -26,14 +26,18 @@ public class EditarUsuarioUseCase implements GestaoEditarUsuario {
     }
 
     @Override
-    public Usuario mudarEstadoDoUsuario(AlterarEstadoDTO alterarEstadoDTO, UsuarioAutenticado usuarioAutenticado) {
+    public Usuario ativarUsuario(UUID usuarioUuid, UsuarioAutenticado usuarioAutenticado) {
         PermissaoValidator.admin(usuarioAutenticado.tipo());
-        Usuario usuario = buscarUsuarioPorUuid(alterarEstadoDTO.usuarioUuid());
-        if (alterarEstadoDTO.ativo()) {
-            usuario.ativar();
-        } else {
-            usuario.inativar();
-        }
+        Usuario usuario = buscarUsuarioPorUuid(usuarioUuid);
+        usuario.ativar();
+        return repository.salvar(usuario);
+    }
+
+    @Override
+    public Usuario inativarUsuario(UUID usuarioUuid, UsuarioAutenticado usuarioAutenticado) {
+        PermissaoValidator.admin(usuarioAutenticado.tipo());
+        Usuario usuario = buscarUsuarioPorUuid(usuarioUuid);
+        usuario.inativar();
         return repository.salvar(usuario);
     }
 
@@ -46,44 +50,44 @@ public class EditarUsuarioUseCase implements GestaoEditarUsuario {
     }
 
     @Override
-    public Usuario alterarSenhaUsuario(AlteracaoSenhaDTO alteracaoSenha, UsuarioAutenticado usuarioAutenticado) {
-        PermissaoValidator.apenasOProprio(usuarioAutenticado, alteracaoSenha.usuarioUuid());
-        Usuario usuario = buscarUsuarioPorUuid(alteracaoSenha.usuarioUuid());
+    public Usuario alterarSenhaUsuario(UUID usuarioUuid, AlteracaoSenhaDTO alteracaoSenha, UsuarioAutenticado usuarioAutenticado) {
+        PermissaoValidator.apenasOProprio(usuarioAutenticado, usuarioUuid);
+        Usuario usuario = buscarUsuarioPorUuid(usuarioUuid);
         usuario.definirNovaSenha(codificador.codificar(alteracaoSenha.senhaNova()));
         return repository.salvar(usuario);
     }
 
     @Override
-    public Usuario alterarDadosAdministrador(AdministradorEdicaoDTO administradorEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
-        PermissaoValidator.apenasOProprio(usuarioAutenticado, administradorEdicaoDTO.uuid());
-        Administrador admin = buscarAdministradorPorUuid(administradorEdicaoDTO.uuid());
+    public Usuario alterarDadosAdministrador(UUID usuarioUuid, AdministradorEdicaoDTO administradorEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
+        PermissaoValidator.apenasOProprio(usuarioAutenticado, usuarioUuid);
+        Administrador admin = buscarAdministradorPorUuid(usuarioUuid);
         validarEmailParaEdicao(admin, administradorEdicaoDTO.email());
         admin.alterarDados(administradorEdicaoDTO.nome(), new Email(administradorEdicaoDTO.email()));
         return repository.salvar(admin);
     }
 
     @Override
-    public Usuario alterarDadosEnfermeiro(EnfermeiroEdicaoDTO enfermeiroEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
-        PermissaoValidator.adminOuApenasProprio(usuarioAutenticado, enfermeiroEdicaoDTO.uuid());
-        Enfermeiro enfermeiro = buscarEnfermeiroPorUuid(enfermeiroEdicaoDTO.uuid());
+    public Usuario alterarDadosEnfermeiro(UUID usuarioUuid, EnfermeiroEdicaoDTO enfermeiroEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
+        PermissaoValidator.adminOuApenasProprio(usuarioAutenticado, usuarioUuid);
+        Enfermeiro enfermeiro = buscarEnfermeiroPorUuid(usuarioUuid);
         validarEmailParaEdicao(enfermeiro, enfermeiroEdicaoDTO.email());
         enfermeiro.alterarDados(enfermeiroEdicaoDTO.nome(), new Email(enfermeiroEdicaoDTO.email()));
         return repository.salvar(enfermeiro);
     }
 
     @Override
-    public Usuario alterarDadosPaciente(PacienteEdicaoDTO pacienteEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
-        PermissaoValidator.adminEpacienteApenasProprio(usuarioAutenticado, pacienteEdicaoDTO.uuid());
-        Paciente paciente = buscarPacientePorUuid(pacienteEdicaoDTO.uuid());
+    public Usuario alterarDadosPaciente(UUID usuarioUuid, PacienteEdicaoDTO pacienteEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
+        PermissaoValidator.adminEpacienteApenasProprio(usuarioAutenticado, usuarioUuid);
+        Paciente paciente = buscarPacientePorUuid(usuarioUuid);
         validarEmailParaEdicao(paciente, pacienteEdicaoDTO.email());
         paciente.alterarDados(pacienteEdicaoDTO.nome(), new Email(pacienteEdicaoDTO.email()), new Telefone(pacienteEdicaoDTO.telefone()));
         return repository.salvar(paciente);
     }
 
     @Override
-    public Usuario alterarDadosMedico(MedicoEdicaoDTO medicoEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
-        PermissaoValidator.adminEMedicoApenasProprio(usuarioAutenticado, medicoEdicaoDTO.uuid());
-        Medico medico = buscarMedicoPorUuid(medicoEdicaoDTO.uuid());
+    public Usuario alterarDadosMedico(UUID usuarioUuid, MedicoEdicaoDTO medicoEdicaoDTO, UsuarioAutenticado usuarioAutenticado) {
+        PermissaoValidator.adminEMedicoApenasProprio(usuarioAutenticado, usuarioUuid);
+        Medico medico = buscarMedicoPorUuid(usuarioUuid);
         validarEmailParaEdicao(medico, medicoEdicaoDTO.email());
         medico.alterarDados(medicoEdicaoDTO.nome(), new Email(medicoEdicaoDTO.email()), Crm.criarDeTextoCompleto(medicoEdicaoDTO.crm()));
         return repository.salvar(medico);
@@ -96,7 +100,7 @@ public class EditarUsuarioUseCase implements GestaoEditarUsuario {
     }
 
     private Usuario buscarUsuarioPorUuid(UUID uuid) {
-        return repository.buscarPorUuid(uuid).orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
+        return repository.buscarPorId(uuid).orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado."));
     }
 
     private Medico buscarMedicoPorUuid(UUID uuid) {
