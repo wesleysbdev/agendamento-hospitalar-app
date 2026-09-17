@@ -22,7 +22,7 @@ public class ConsultaHistoricoResolver {
     private final BuscarConsultasFuturasUseCase buscarConsultasFuturasUseCase;
 
     @QueryMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMINISTRADOR', 'ROLE_ENFERMEIRO', 'ROLE_PACIENTE')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ENFERMEIRO', 'ROLE_PACIENTE', 'ROLE_MEDICO')")
     public List<ConsultaHistorico> historicoPaciente(
             @Argument("pacienteId") UUID pacienteId,
             @AuthenticationPrincipal Jwt jwt
@@ -34,7 +34,7 @@ public class ConsultaHistoricoResolver {
     }
 
     @QueryMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMINISTRADOR', 'ROLE_ENFERMEIRO', 'ROLE_PACIENTE')")
+    @PreAuthorize("hasAnyAuthority('ROLE_ENFERMEIRO', 'ROLE_PACIENTE', 'ROLE_MEDICO')")
     public List<ConsultaHistorico> consultasFuturas(
             @Argument("pacienteId") UUID pacienteId,
             @AuthenticationPrincipal Jwt jwt
