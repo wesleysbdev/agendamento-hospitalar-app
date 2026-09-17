@@ -87,7 +87,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@hospital.com\",\n  \"senha\": \"Admin@123\"\n}",
+              "raw": "{\n  \"email\": \"admin@hospital.com\",\n  \"senha\": \"paciente\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
